@@ -39,7 +39,6 @@ class Worker
       
      
 };
-
 class Provider
 {
     private:
@@ -72,7 +71,7 @@ class Provider
         string getProviderPhone(){
           return phone;
 };
-
+};
 class Product : public Provider
 {
   Provider buf;
@@ -82,6 +81,7 @@ class Product : public Provider
         int* id_provider;
 
     public:
+        Product() {};
         Product(int aId, int* aId_provider, int aPrice, int aStock, int aStock_min, string aDescription) {
             id = aId;
             id_provider = aId_provider;
@@ -138,7 +138,6 @@ class Product : public Provider
           }
         };
 };
-
 class Client
 {
     private:
@@ -172,7 +171,6 @@ class Client
           return phone;
         };
 };
-
 class Receipt: public Product
 {
 
@@ -206,11 +204,7 @@ Product buf;
         int* id_client;
         int quantity;
     public:
-        Purchase(int aId, int* aId_product, int* aId_Client, int aQuantity) {
-            id = aId;
-            id_product = aId_product;
-            id_client = aId_Client;
-            quantity = aQuantity;
+        Purchase(int aId, int aId_product, int* aId_Client, int aQuantity) {
 
             arc.open("product.dat",ios::binary | ios::in);
             
@@ -218,8 +212,14 @@ Product buf;
             {
               arc.read((char *)&buf,sizeof(buf));
               if (arc.eof()) break;
-              if (buf.getProductId() == *id_product){
+              if (buf.getProductId() == aId_product){
                 if(buf.checkStock(quantity)){
+
+                      id = aId;
+                      *id_product = buf.getProductId(); 
+                      id_client = aId_Client;
+                      quantity = aQuantity;
+
                     arc.open("purchase.dat",ios::binary | ios::app);
                       arc.write((char *)this,sizeof(*this));
                       arc.close();
@@ -234,26 +234,51 @@ Product buf;
             arc.close();
         };
 
-        void makePurchase(){
-          Product buf;
-          arc.open("product.dat",ios::binary | ios::in);
-          while (1)
-          {
-            arc.read((char *)&buf,sizeof(buf));
-            if (arc.eof()) break;
-            if (buf.id == *id_product){
-              buf.checkStock(*quantity);
-              buf.setStock(*quantity);
-            }
-          }
-        };
+        
 };
 
+void loadWorkers(){
+  Worker jordano(29907856,"Jordano Pernia" , "admi", "ryuk");
+  Worker oriana(1,"Oriana Moreno", "warehouse", "");
+  Worker ariani(2,"Ariani Valera", "cashier", "");
+};
+
+void loadProviders(){
+  Provider provider1(29907856,"Jordano Pernia", "0414-3711282");
+  Provider provider2(2,"Oriana Moreno", "0414-7347068");
+  Provider provider3(3,"Ariani Valera", "0426-2705797");
+};
+
+void loadProducts(){
+
+// Este proceso es necesario para obtener la direccion de memoria del id de cada uno 
+// de los proveedores sin tener que usar dobles punteros o intermediarios
+
+  Product products[5]; 
+  int prices[] = {4000, 6500, 5000, 4500, 3500};
+  int stock[] = {80, 50, 60, 55, 40};
+  int minStock[] = {20, 10, 15, 10, 5};
+  string descriptions[] = {"Corn Flour", "White Flour", "Pasta", "Lentils", "Milk"};
+  int n = 0;
+  Product buf;
+    arc.open("provider.dat", ios::binary | ios::in );
+
+    while (1)
+    {
+      arc.read((char *)&buf,sizeof(buf));
+      if (arc.eof()) break;
+      products[n] = Product(n, &buf.getProviderId(), prices[n],stock[n], minStock[n], descriptions[n]);
+      n++;
+    }
+    
+
+
+  };
+
 int main(){
- 
-  
-
-
+  loadWorkers();
+  loadProviders();
+  loadProducts();
 
   return 0;
 }

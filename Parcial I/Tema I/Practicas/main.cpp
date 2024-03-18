@@ -27,7 +27,7 @@ class Mascota
 int main()
 {
 
-    Mascota v[]= { {"Sultan", 6, perro}, {"Mota", 3, gato}, {"Copito", 2, conejo} , {"Ryuk", 8, perro}};
+    Mascota v[]= { {"Sultan", 6, perro}, {"Mota", 3, gato}, {"Copito", 2, conejo}};
     Mascota buf;
     fstream arc;
     arc.open("mascota.dat",ios::binary | ios::out);
@@ -40,9 +40,6 @@ int main()
         arc.read((char *)&buf,sizeof(buf));
         if (arc.eof()) break;
         buf.imprimir();
-        if (buf.getNom() == "Ryuk"){
-            cout << "El es el mejor " << buf.getTipo() << " de todos. " << endl;
-        };
         
     }
     arc.close();
