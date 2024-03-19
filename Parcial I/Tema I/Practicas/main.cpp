@@ -7,18 +7,18 @@ using namespace std;
 // Actividad: Reemplaza los signos de interrogacion con los metodos u operadores correspondientes, 
 //            compilar y ejecutar el programa correctamente
 enum tipo{gato, perro, conejo};
-string Tipo[]={"gato","perro","conejo"};
+char Tipo[][10]={"gato","perro","conejo"};
 
 class Mascota
 {
     private:
-        string nom;
+        char nom[30];
         int  edad;
         tipo animal;
     public:
         Mascota() { }
-        Mascota(string n, int e, tipo tip=perro) { nom = n; edad=e; animal=tip;}
-        string getNom() { return nom;}
+        Mascota(char *n, int e, tipo tip=perro) { strcpy(nom,n); edad=e; animal=tip;}
+        char *getNom() { return nom;}
         int  getEdad() { return edad;}
         tipo getTipo() { return animal;}
         void imprimir(){ cout<<nom<<"\t"<<edad<<"\t"<<Tipo[animal]<<endl; }
@@ -27,6 +27,7 @@ class Mascota
 int main()
 {
 
+    
     Mascota v[]= { {"Sultan", 6, perro}, {"Mota", 3, gato}, {"Copito", 2, conejo}};
     Mascota buf;
     fstream arc;
