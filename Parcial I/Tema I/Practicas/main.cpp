@@ -17,7 +17,7 @@ class Mascota
         tipo animal;
     public:
         Mascota() { }
-        Mascota(char *n, int e, tipo tip=perro) { strcpy(nom,n); edad=e; animal=tip;}
+        Mascota(string n, int e, tipo tip=perro) { strcpy(nom,n.c_str()); edad=e; animal=tip;}
         char *getNom() { return nom;}
         int  getEdad() { return edad;}
         tipo getTipo() { return animal;}
