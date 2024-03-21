@@ -4,624 +4,643 @@
 #include <string>
 #include <fstream>
 
-
 using namespace std;
 
 // First, we build an object for each of the table of the DB, as an extract table for the workers
-
 fstream work, prov, prod, client, receipt, purc, arc;
 class Worker{
- 
-    private:
-        int id;
-        char name[60];
-        char rol[10];
-        char password[8];
+  private:
+      int id;
+      char name[60];
+      char rol[10];
+      char password[8];
 
-        char g[2] = "0";
-    public:
-      Worker()  { }
-      Worker(int aId, string aName, string aRol, string aPassword) {
-            id = aId;
-            strcpy(name,aName.c_str());
-            strcpy(rol,aRol.c_str());
-            strcpy(password,aPassword.c_str());
+      char g[2] = "0";
+  public:
+    Worker()  { };
+    Worker(int aId, string aName, string aRol, string aPassword) {
+          id = aId;
+          strcpy(name,aName.c_str());
+          strcpy(rol,aRol.c_str());
+          strcpy(password,aPassword.c_str());
 
-            work.open("worker.dat",ios::binary | ios::app);
-            work.seekg(0, ios::end);
-            work.write(reinterpret_cast<char *>(this),sizeof(*this));
-            work.close();
-        };
-
-      bool checkWorkerRol(string aName, string aPassword){
-        if(strcmp(aName.c_str(), name) == 0 && strcmp(aPassword.c_str(), password) == 0){
-          return true;
-        }
-        else{
-          return false;
-        };
+          work.open("worker.dat",ios::binary | ios::app);
+          work.write(reinterpret_cast<char *>(this),sizeof(*this));
+          work.close();
       };
 
-      char *getWorkerRol(){
-        return rol;
+    bool checkWorkerRol(string aName, string aPassword){
+      if(strcmp(aName.c_str(), name) == 0 && strcmp(aPassword.c_str(), password) == 0){
+        return true;
       }
-
-
-      char *getWorkerName(){
-        return name;
+      else{
+        return false;
       };
+    };
 
-      char *getWorkerPassword(){
-        return password;
-      };
+    char *getWorkerRol(){
+      return rol;
+    }
 
-      int getWorkerId(){
-        return id;
-      };
 
-      void setName(string aName){
-        strcpy(name, aName.c_str());
-      };
+    char *getWorkerName(){
+      return name;
+    };
 
-      void setRol(string aRol){
-        strcpy(rol, aRol.c_str());
-      };
+    char *getWorkerPassword(){
+      return password;
+    };
 
-      void setPassword(string aPassword){
-        strcpy(password, aPassword.c_str());   
-      };
+    int getWorkerId(){
+      return id;
+    };
+
+    void setName(string aName){
+      strcpy(name, aName.c_str());
+    };
+
+    void setRol(string aRol){
+      strcpy(rol, aRol.c_str());
+    };
+
+    void setPassword(string aPassword){
+      strcpy(password, aPassword.c_str());   
+    };
 
 };
 void editWorker(){
-        int idTemp;
-        int flag2 = 1;
+    int idTemp;
+    int flag2 = 1;
+    string aName, aRol, aPassword;
+    bool found = false;
 
-        string aName, aRol, aPassword;
-
-        Worker buf;
-        while(flag2 == 1)
+    Worker buf;
+    while(flag2 == 1)
+    {
+      cout << "Enter the id of the worker you want to edit: " << endl;
+      cin >> idTemp;
+  
+      work.open("worker.dat", ios::in | ios::out | ios::binary );
+      while (1)
+      {
+        work.read((char *)&buf,sizeof(buf));
+        if(work.eof()) break;
+        if (buf.getWorkerId() == idTemp)
         {
-         cout << "Enter the id of the worker you want to edit: " << endl;
-         cin >> idTemp;
+          cout << "Enter the new name: " << endl;
+          cin >> aName;
+          buf.setName(aName);
+          cout << "Enter the new password: " << endl;
+          cin >> aPassword;
+          buf.setPassword(aPassword);
+          cout << "Enter the new rol: " << endl;
+          cin >> aRol;
+          buf.setRol(aRol);
+
+          work.seekp(work.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
+          work.write((char *)&buf,sizeof(buf));
+          
+
+          cout << "A new worker was created" << endl;
+          found = true;
+          break;
+        }
+       
+      }
+      work.close();
+    if(!found){
+      cout << "Worker Not Found" << endl;
+    } 
+    
+    cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
+    cin >> flag2;
+    };
+  }
+void deleteWorker(){
+    int idTemp;
+    int flag2 = 1;
+    bool found = false;
+    Worker buf;
+    ifstream f("worker.dat", ios::binary);
+    ofstream temp("temp.dat", ios::binary);
+    while(flag2 == 1)
+    {
+      cout << "Enter the id of the worker you want to delete: " << endl;
+      cin >> idTemp;
+
+      while(f.read((char *)&buf, sizeof(buf)))
+      {
       
-         work.open("worker.dat", ios::in | ios::out | ios::binary );
-         while (1)
-         {
-            work.read((char *)&buf,sizeof(buf));
-            if(work.eof()) break;
-            if (buf.getWorkerId() == idTemp)
-            {
-              cout << "Enter the new name: " << endl;
-              cin >> aName;
-              buf.setName(aName);
-              cout << "Enter the new password: " << endl;
-              cin >> aPassword;
-              buf.setPassword(aPassword);
-              cout << "Enter the new rol: " << endl;
-              cin >> aRol;
-              buf.setRol(aRol);
+        if(buf.getWorkerId() != idTemp)
+        {
+          temp.write((char *)&buf, sizeof(buf));
+          found = true;
+        };
+      };
 
-              work.seekp(work.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
-              work.write((char *)&buf,sizeof(buf));
-              
+      f.close();
+      temp.close();
 
-              cout << "New user data" << endl;
-              cout << "Name: " << buf.getWorkerName() << endl;
-              cout << "Password: " << buf.getWorkerPassword() << endl;
-              cout << "Rol: " << buf.getWorkerRol() << endl;
-              break;
-            }
-            work.close();
-         }
-         
+      remove("worker.dat");
+      rename("temp.dat", "worker.dat");
+
+      if(found){
+        flag2 = 0;
+      }
+      else{
         cout << "Worker Not Found" << endl;
         cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
         cin >> flag2;
-        };
       }
-void deleteWorker(){
-        int idTemp;
-        int flag2 = 1;
-        bool found = false;
-        Worker buf;
-        ifstream f("worker.dat", ios::binary);
-        ofstream temp("temp.dat", ios::binary);
-        while(flag2 == 1)
-        {
-          cout << "Enter the id of the worker you want to delete: " << endl;
-          cin >> idTemp;
-
-          while(f.read((char *)&buf, sizeof(buf)))
-          {
-          
-            if(buf.getWorkerId() != idTemp)
-            {
-              temp.write((char *)&buf, sizeof(buf));
-              found = true;
-            };
-          };
-
-          f.close();
-          temp.close();
-
-          remove("worker.dat");
-          rename("temp.dat", "worker.dat");
-
-          if(found){
-            flag2 = 0;
-          }
-          else{
-            cout << "Worker Not Found" << endl;
-            cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
-            cin >> flag2;
-          }
-          
-        };
-      }
+      
+    };
+  }
 
 class Provider
 {
-    private:
-        int id;
-        char name[50];
-        char phone[14];
-    public:
-        Provider(){ };
-        Provider(int aId, string aName, string aPhone) {
-            id = aId;
-            strcpy(name, aName.c_str());
-            strcpy(phone, aPhone.c_str());
-
-            prov.open("provider.dat",ios::binary | ios::app);
-            prov.write(reinterpret_cast<char *>(this),sizeof(*this));
-            prov.close();
-        };
-
-        int getProviderId(){
-          return id;
-        };
-        
-        void setProviderName(string aName){
-           strcpy(name, aName.c_str());
-        };
-        void setProviderPhone(string aPhone){
+  private:
+      int id;
+      char name[50];
+      char phone[14];
+  public:
+      Provider(){ };
+      Provider(int aId, string aName, string aPhone) {
+          id = aId;
+          strcpy(name, aName.c_str());
           strcpy(phone, aPhone.c_str());
-        };
-        char* getProviderName(){
-          return name;
-        };
-        char* getProviderPhone(){
-          return phone;
+
+          prov.open("provider.dat",ios::binary | ios::app);
+          prov.write(reinterpret_cast<char *>(this),sizeof(*this));
+          prov.close();
+      };
+
+      int getProviderId(){
+        return id;
+      };
+      
+      void setProviderName(string aName){
+          strcpy(name, aName.c_str());
+      };
+      void setProviderPhone(string aPhone){
+        strcpy(phone, aPhone.c_str());
+      };
+      char* getProviderName(){
+        return name;
+      };
+      char* getProviderPhone(){
+        return phone;
 };
 };       
 void editProvider(){
-        int idTemp;
-        int flag2 = 1;
-        string aName, aPhone;
+    int idTemp;
+    int flag2 = 1;
+    string aName, aPhone;
+    bool found = false;
 
-        Provider buf;
-        while(flag2 == 1)
+    Provider buf;
+    while(flag2 == 1)
+    {
+      cout << "Enter the id of the Provider you want to edit: " << endl;
+      cin >> idTemp;
+  
+      prov.open("provider.dat", ios::in | ios::out | ios::binary );
+      while (1)
+      {
+        prov.read((char *)&buf,sizeof(buf));
+        if(prov.eof()) break;
+        if (buf.getProviderId() == idTemp)
         {
-         cout << "Enter the id of the Provider you want to edit: " << endl;
-         cin >> idTemp;
-      
-         prov.open("provider.dat", ios::in | ios::out | ios::binary );
-         while (1)
-         {
-            prov.read((char *)&buf,sizeof(buf));
-            if(prov.eof()) break;
-            if (buf.getProviderId() == idTemp)
-            {
-              cout << "Enter the new name: " << endl;
-              cin >> aName;
-              buf.setProviderName(aName);
-              cout << "Enter the new password: " << endl;
-              cin >> aPhone;
-              buf.setProviderPhone(aPhone);
-              
+          cout << "Enter the new name: " << endl;
+          cin >> aName;
+          buf.setProviderName(aName);
+          cout << "Enter the new password: " << endl;
+          cin >> aPhone;
+          buf.setProviderPhone(aPhone);
+          
 
-              prov.seekp(work.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
-              prov.write((char *)&buf,sizeof(buf));
-              break;
-            }
-            prov.close();
-         }
-         
-        cout << "Provider not Found" << endl;
-        cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
-        cin >> flag2;
-        };
+          prov.seekp(work.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
+          prov.write((char *)&buf,sizeof(buf));
+          found = true;
+          break;
+        }
+        
       }
+    prov.close();
+
+    if(!found){
+    cout << "Provider not Found" << endl;
+    };
+    
+    cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
+    cin >> flag2;
+    };
+  }
 void deleteProvider(){
-        int idTemp;
-        int flag2 = 1;
-        bool found = false;
-        Worker buf;
-        ifstream f("provider.dat", ios::binary);
-        ofstream temp("temp.dat", ios::binary);
-        while(flag2 == 1)
-        {
-          cout << "Enter the id of the worker you want to delete: " << endl;
-          cin >> idTemp;
+  int idTemp;
+  int flag2 = 1;
+  bool found = false;
+  Worker buf;
+  ifstream f("provider.dat", ios::binary);
+  ofstream temp("temp.dat", ios::binary);
+  while(flag2 == 1)
+  {
+    cout << "Enter the id of the worker you want to delete: " << endl;
+    cin >> idTemp;
 
-          while(f.read((char *)&buf, sizeof(buf)))
-          {
-          
-            if(buf.getWorkerId() != idTemp)
-            {
-              temp.write((char *)&buf, sizeof(buf));
-              found = true;
-            };
-          };
+    while(f.read((char *)&buf, sizeof(buf)))
+    {
+    
+      if(buf.getWorkerId() != idTemp)
+      {
+        temp.write((char *)&buf, sizeof(buf));
+        found = true;
+      };
+    };
 
-          f.close();
-          temp.close();
+    f.close();
+    temp.close();
 
-          remove("provider.dat");
-          rename("temp.dat", "provider.dat");
+    remove("provider.dat");
+    rename("temp.dat", "provider.dat");
 
-          if(found){
-            flag2 = 0;
-          }
-          else{
-            cout << "Provider not Found" << endl;
-            cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
-            cin >> flag2;
-          }
-          
-        };
-      }
+    if(found){
+      flag2 = 0;
+    }
+    else{
+      cout << "Provider not Found" << endl;
+      cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
+      cin >> flag2;
+    }
+    
+  };
+}
 
 class Product : public Provider
 {
   Provider buf;
-    private:
-        int id, price, stock, stock_min, id_provider;
-        char description[30];
+  private:
+      int id, price, stock, stock_min, id_provider;
+      char description[30];
 
-    public:
-        Product() {};
-        Product(int aId, int aId_provider, int aPrice, int aStock, int aStock_min, string aDescription) {
-            id = aId;
-            id_provider = aId_provider;
-            price = aPrice;
-            stock = aStock;
-            stock_min = aStock_min;
-            strcpy(description, aDescription.c_str());
-
-            prov.open("product.dat",ios::binary | ios::app);
-            prov.write(reinterpret_cast<char *>(this),sizeof(*this));
-            prov.close();
-        };
-
-        int getProductId(){
-          return id;
-        };
-
-        int getProductPrice(){
-          return price;
-        };
-
-        int getProviderId(){
-          return id_provider;
-        };
-
-        int getProductStock(){
-          return stock;
-        };
-
-        int getProductMinStock(){
-          return stock_min;
-        };
-
-        char *getProductDescription(){
-          return description;
-        }
-
-        void setProductPrice(int aPrice){
-          price = aPrice;
-        };
-        
-        void setProductStockMin(int aStock_min){
-          stock_min = aStock_min;
-        };
-
-        void setProductDescription(string aDescription){
-          strcpy(description, aDescription.c_str());
-        };
-
-        void setProviderId(int aId_provider){
+  public:
+      Product() {};
+      Product(int aId, int aId_provider, int aPrice, int aStock, int aStock_min, string aDescription) {
+          id = aId;
           id_provider = aId_provider;
+          price = aPrice;
+          stock = aStock;
+          stock_min = aStock_min;
+          strcpy(description, aDescription.c_str());
+
+          prov.open("product.dat",ios::binary | ios::app);
+          prov.write(reinterpret_cast<char *>(this),sizeof(*this));
+          prov.close();
+      };
+
+      int getProductId(){
+        return id;
+      };
+
+      int getProductPrice(){
+        return price;
+      };
+
+      int getProviderId(){
+        return id_provider;
+      };
+
+      int getProductStock(){
+        return stock;
+      };
+
+      int getProductMinStock(){
+        return stock_min;
+      };
+
+      char *getProductDescription(){
+        return description;
+      }
+
+      void setProductPrice(int aPrice){
+        price = aPrice;
+      };
+      
+      void setProductStockMin(int aStock_min){
+        stock_min = aStock_min;
+      };
+
+      void setProductDescription(string aDescription){
+        strcpy(description, aDescription.c_str());
+      };
+
+      void setProviderId(int aId_provider){
+        id_provider = aId_provider;
+      }
+
+
+
+      void setProductStock(int aStock){
+        stock -= aStock;
+      };
+
+      bool checkStock(int quantity){
+        if(stock > quantity) return true;
+        else return false;   
+      };
+
+      void checkReStock(){
+        if(stock < stock_min){
+          reStock();
         }
+      };
+
+      void reStock(){
+        prov.open("provider.dat",ios::binary | ios::in);
+        while (1)
+        {
+          prov.read((char *)&buf,sizeof(buf));
+          if (prov.eof()) break;
+          if (buf.getProviderId() == id_provider){
+            char* providerName = buf.getProviderName();
+            char* providerPhone = buf.getProviderPhone();
+
+            string requestDocTitle ="restockOrder_" + to_string(id) + ".dat";
+            string requestDocContent = "We need to restock the product with id: " + to_string(id);
 
 
+            arc.open(requestDocTitle,ios::binary | ios::out);
+            arc.write((char *)&providerName,sizeof(providerName));
+            arc.write((char *)&providerPhone,sizeof(providerPhone));
 
-        void setProductStock(int aStock){
-          stock -= aStock;
-        };
-
-        bool checkStock(int quantity){
-          if(stock > quantity) return true;
-          else return false;   
-        };
-
-        void checkReStock(){
-          if(stock < stock_min){
-            reStock();
+            arc.close();
+            
           }
-        };
-
-        void reStock(){
-          prov.open("provider.dat",ios::binary | ios::in);
-          while (1)
-          {
-            prov.read((char *)&buf,sizeof(buf));
-            if (prov.eof()) break;
-            if (buf.getProviderId() == id_provider){
-              char* providerName = buf.getProviderName();
-              char* providerPhone = buf.getProviderPhone();
-
-              string requestDocTitle ="restockOrder_" + to_string(id) + ".dat";
-              string requestDocContent = "We need to restock the product with id: " + to_string(id);
-
-
-              arc.open(requestDocTitle,ios::binary | ios::out);
-              arc.write((char *)&providerName,sizeof(providerName));
-              arc.write((char *)&providerPhone,sizeof(providerPhone));
-
-              arc.close();
-              
-            }
-          }
-        };
+        }
+      };
 };
 void editProduct(){
-        int idTemp, aProviderId, aPrice, aStock, aMinStock;
-        string aDescription;
-        int flag2 = 1;
+    int idTemp, aProviderId, aPrice, aStock, aMinStock;
+    string aDescription;
+    bool productCheck = false;
+    int flag2 = 1;
 
-        Product buf;
-        while(flag2 == 1)
+    Product buf;
+    while(flag2 == 1)
+    {
+      cout << "Enter the id of the product you want to edit: " << endl;
+      cin >> idTemp;
+  
+      prod.open("product.dat", ios::in | ios::out | ios::binary );
+      while (1)
+      {
+        prod.read((char *)&buf,sizeof(buf));
+        if(prod.eof()) break;
+        
+        if (buf.getProductId() == idTemp)
         {
-         cout << "Enter the id of the product you want to edit: " << endl;
-         cin >> idTemp;
-      
-         prod.open("product.dat", ios::in | ios::out | ios::binary );
-         while (1)
-         {
-            prod.read((char *)&buf,sizeof(buf));
-            if(prod.eof()) break;
-            
-            if (buf.getProductId() == idTemp)
-            {
-             int flag3 = 1;
-                while(flag3 == 1){
-                  cout << "Enter the id of new the provider: " << endl;
-                  cin >> aProviderId;
-                  // we need to check that the provider exits
-                  Provider buff;
-                  fstream f;
-                  f.open("provider.dat", ios::binary | ios::in);
-                  f.seekg(0, ios::beg);
-                  while (1)
-                  {
-                    f.read((char *)&buff,sizeof(buff));
-                    if (f.eof()){
-                      cout << "Provider not found" << endl;
-                      cout << "Enter an existing id" << endl;
-                      
-                      break;
-                    } 
-                    if (buff.getProviderId() == aProviderId){
-                      buf.setProviderId(aProviderId);
-                      flag3 = 0;
-                      break;
-                    }
-                  }
-                  f.close();
+          productCheck = true;
+          int flag3 = 1;
+            while(flag3 == 1){
+              cout << "Enter the id of new the provider: " << endl;
+              cin >> aProviderId;
+              // we need to check that the provider exits
+              Provider buff;
+              fstream f;
+              f.open("provider.dat", ios::binary | ios::in);
+              f.seekg(0, ios::beg);
+              while (1)
+              {
+                f.read((char *)&buff,sizeof(buff));
+                if (f.eof()){
+                  cout << "Provider not found" << endl;
+                  cout << "Enter an existing id" << endl;
+                  
+                  break;
+                } 
+                if (buff.getProviderId() == aProviderId){
+                  buf.setProviderId(aProviderId);
+                  flag3 = 0;
+                  break;
                 }
-                
-              cout << "Enter the new price: " << endl;
-              cin >> aPrice;
-              buf.setProductPrice(aPrice);
-              cout << "Enter the new stock: " << endl;
-              cin >> aStock;
-              buf.setProductStock(aStock);
-              cout << "Enter the new min stock: " << endl;
-              buf.setProductStockMin(aMinStock);
-              cin >> aMinStock;
-              cout << "Enter the new description: "<< endl;
-              cin >> aDescription;
-              buf.setProductDescription(aDescription.c_str());
-
-              prov.seekp(prov.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
-              prov.write((char *)&buf,sizeof(buf));
-              
-
-              cout << "New product data" << endl;
-              cout << "Description of the product: " << buf.getProductDescription() << endl;
-              cout << "Price of the product: " << buf.getProductPrice() << endl;
-              cout << "Id of the provider: " << buf.getProviderId() << endl;
-              cout << "Stock of the Product: " << buf.getProductStock() << endl;
-              cout << "Min stock of the product: " << buf.getProductMinStock() << endl;
-              break;
+              }
+              f.close();
             }
-            prov.close();
-         }
-         
-         prod.close();
+            
+          cout << "Enter the new price: " << endl;
+          cin >> aPrice;
+          buf.setProductPrice(aPrice);
+          cout << "Enter the new stock: " << endl;
+          cin >> aStock;
+          buf.setProductStock(aStock);
+          cout << "Enter the new min stock: " << endl;
+          buf.setProductStockMin(aMinStock);
+          cin >> aMinStock;
+          cout << "Enter the new description: "<< endl;
+          cin >> aDescription;
+          buf.setProductDescription(aDescription.c_str());
+
+          prov.seekp(prov.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
+          prov.write((char *)&buf,sizeof(buf));
+          
+
+          cout << "New product data" << endl;
+          cout << "Description of the product: " << buf.getProductDescription() << endl;
+          cout << "Price of the product: " << buf.getProductPrice() << endl;
+          cout << "Id of the provider: " << buf.getProviderId() << endl;
+          cout << "Stock of the Product: " << buf.getProductStock() << endl;
+          cout << "Min stock of the product: " << buf.getProductMinStock() << endl;
+          break;
+        }
+        prov.close();
+      } 
+    prod.close();
+    if(!productCheck){
+      cout << "" << endl;
+      cout << "Product Not Found" << endl;
+    }
+    
+    cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
+    cin >> flag2;
+    };
+  }
+void deleteProduct(){
+    int idTemp;
+    int flag2 = 1;
+    bool found = false;
+    Worker buf;
+    ifstream f("product.dat", ios::binary);
+    ofstream temp("temp.dat", ios::binary);
+
+    
+    while(flag2 == 1)
+    {
+      cout << "Enter the id of the worker you want to delete: " << endl;
+      cin >> idTemp;
+
+      while(f.read((char *)&buf, sizeof(buf)))
+      {
+      
+        if(buf.getWorkerId() != idTemp)
+        {
+          temp.write((char *)&buf, sizeof(buf));
+          found = true;
+        };
+      };
+
+      f.close();
+      temp.close();
+
+      remove("product.dat");
+      rename("temp.dat", "product.dat");
+
+      if(found){
+        flag2 = 0;
+        cout << "The operation was succesfull." << endl;
+      } else{
         cout << "Product Not Found" << endl;
         cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
         cin >> flag2;
-        };
       }
-void deleteProduct(){
-        int idTemp;
-        int flag2 = 1;
-        bool found = false;
-        Worker buf;
-        ifstream f("product.dat", ios::binary);
-        ofstream temp("temp.dat", ios::binary);
-
-        
-        while(flag2 == 1)
-        {
-          cout << "Enter the id of the worker you want to delete: " << endl;
-          cin >> idTemp;
-
-          while(f.read((char *)&buf, sizeof(buf)))
-          {
-          
-            if(buf.getWorkerId() != idTemp)
-            {
-              temp.write((char *)&buf, sizeof(buf));
-              found = true;
-            };
-          };
-
-          f.close();
-          temp.close();
-
-          remove("product.dat");
-          rename("temp.dat", "product.dat");
-
-          if(found){
-            flag2 = 0;
-            cout << "The operation was succesfull." << endl;
-          } else{
-            cout << "Product Not Found" << endl;
-            cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
-            cin >> flag2;
-          }
-          
-        };
-      }
+      
+    };
+  }
 
 class Client
 {
-    private:
-        int id;
-        char name[50], address[50], phone[14];
-    public:
-        Client(){ };
-        Client(int aId, string aName, string aPhone) {
-            id = aId;
-            strcmp(name, aName.c_str());
-            strcmp(phone, aPhone.c_str());
-
-            client.open("client.dat",ios::binary | ios::app);
-            client.write(reinterpret_cast<char *>(this),sizeof(*this));
-            client.close();
-        };
-
-   
-
-        int getClientId(){
-          return id;
-        };
-        void setClientName(string aName){
+  private:
+      int id;
+      char name[50], address[50], phone[14];
+  public:
+      Client(){ };
+      Client(int aId, string aName, string aPhone) {
+          id = aId;
           strcmp(name, aName.c_str());
-        };
-        void setClientPhone(string aPhone){
           strcmp(phone, aPhone.c_str());
-        };
-        char* getClientName(){
-          return name;
-        };
-        char* getClientPhone(){
-          return phone;
-        };
+
+          client.open("client.dat",ios::binary | ios::app);
+          client.write(reinterpret_cast<char *>(this),sizeof(*this));
+          client.close();
+      };
+
+  
+
+      int getClientId(){
+        return id;
+      };
+      void setClientName(string aName){
+        strcmp(name, aName.c_str());
+      };
+      void setClientPhone(string aPhone){
+        strcmp(phone, aPhone.c_str());
+      };
+      char* getClientName(){
+        return name;
+      };
+      char* getClientPhone(){
+        return phone;
+      };
 };
 void editClient(){
-        int idTemp;
-        int flag2 = 1;
-        string aName, aPhone;
+  int idTemp;
+  int flag2 = 1;
+  string aName, aPhone;
+  bool found = false;
 
-        Client buf;
-        while(flag2 == 1)
-        {
-         cout << "Enter the id of the Client you want to edit: " << endl;
-         cin >> idTemp;
+  Client buf;
+  while(flag2 == 1)
+  {
+    cout << "Enter the id of the Client you want to edit: " << endl;
+    cin >> idTemp;
+
+    client.open("client.dat", ios::in | ios::out | ios::binary );
+    while (1)
+    {
+      client.read((char *)&buf,sizeof(buf));
+      if(client.eof()) break;
+      if (buf.getClientId() == idTemp)
+      {
+        cout << "Enter the new name: " << endl;
+        cin >> aName;
+        buf.setClientName(aName);
+        cout << "Enter the new phone: " << endl;
+        cin >> aPhone;
+        buf.setClientPhone(aPhone);
+        
+
+        client.seekp(client.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
+        client.write((char *)&buf,sizeof(buf));
+        found = true;
+        break;
+      }
       
-         client.open("client.dat", ios::in | ios::out | ios::binary );
-         while (1)
-         {
-            client.read((char *)&buf,sizeof(buf));
-            if(client.eof()) break;
-            if (buf.getClientId() == idTemp)
-            {
-              cout << "Enter the new name: " << endl;
-              cin >> aName;
-              buf.setClientName(aName);
-              cout << "Enter the new phone: " << endl;
-              cin >> aPhone;
-              buf.setClientPhone(aPhone);
-              
+    }
+    client.close();
+  if(!found){
+      cout << "Client not Found" << endl;
+  }
+  
+  cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
+  cin >> flag2;
+  };
 
-              client.seekp(client.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
-              client.write((char *)&buf,sizeof(buf));
-              break;
-            }
-            
-         }
-         client.close();
-         
+}
+void deleteClient(){
+    int idTemp;
+    int flag2 = 1;
+    bool found = false;
+    Worker buf;
+    ifstream f("client.dat", ios::binary);
+    ofstream temp("temp.dat", ios::binary);
+    while(flag2 == 1)
+    {
+      cout << "Enter the id of the worker you want to delete: " << endl;
+      cin >> idTemp;
+
+      while(f.read((char *)&buf, sizeof(buf)))
+      {
+      
+        if(buf.getWorkerId() != idTemp)
+        {
+          temp.write((char *)&buf, sizeof(buf));
+          found = true;
+        };
+      };
+
+      f.close();
+      temp.close();
+
+      remove("client.dat");
+      rename("temp.dat", "client.dat");
+
+      if(found){
+        flag2 = 0;
+      }
+      else{
         cout << "Client not Found" << endl;
         cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
         cin >> flag2;
-        };
-      
+      }
+    };
 }
-void deleteClient(){
-        int idTemp;
-        int flag2 = 1;
-        bool found = false;
-        Worker buf;
-        ifstream f("client.dat", ios::binary);
-        ofstream temp("temp.dat", ios::binary);
-        while(flag2 == 1)
-        {
-          cout << "Enter the id of the worker you want to delete: " << endl;
-          cin >> idTemp;
-
-          while(f.read((char *)&buf, sizeof(buf)))
-          {
-          
-            if(buf.getWorkerId() != idTemp)
-            {
-              temp.write((char *)&buf, sizeof(buf));
-              found = true;
-            };
-          };
-
-          f.close();
-          temp.close();
-
-          remove("client.dat");
-          rename("temp.dat", "client.dat");
-
-          if(found){
-            flag2 = 0;
-          }
-          else{
-            cout << "Client not Found" << endl;
-            cout << "if you want to continue this process, press 1, if not, press any other number" << endl;
-            cin >> flag2;
-          }
-          
-        };
-      
+void createClient(int anId){
+   string aName, aPhone;
+      cout << "Enter the name of the new client: " << endl;
+      cin >> aName;
+      cout << "Enter the phone number of the new client: " << endl;
+      cin >> aPhone;
+      Client(anId, aName, aPhone);
+      cout << "Operation succesfull, a new client was created." << endl;
 }
 
 class Receipt: public Product
 {
-
   time_t unparsedDate = time(0);
     private:
         int id;
         int id_client;
         char* date;
     public:
+        Receipt() {};
         Receipt(int aId, int aId_client) {
             id = aId;
             id_client = aId_client;
@@ -633,8 +652,16 @@ class Receipt: public Product
             receipt.close();
         };
 
+        int getReceiptId(){
+          return id;
+        }
+
        
 };
+void createReceipt(int anId, int aClientId){
+  Receipt(anId, aClientId);
+}
+
 class Purchase : public Product
 {
 Product buf;
@@ -680,14 +707,14 @@ Product buf;
 
 void loadWorkers(){
   Worker(29907856,"Jordano" , "admi", "ryuk");
-  Worker(1,"Oriana", "warehouse", "oriexe");
-  Worker(2,"Ariani", "cashier", "aliendot");
+  Worker(29929240,"Oriana", "warehouse", "oriexe");
+  Worker(31180603,"Ariani", "cashier", "aliendot");
   
 };
 void loadProviders(){
   Provider(29907856,"Jordano Pernia", "0414-3711282");
-  Provider(1,"Oriana Moreno", "0414-7347068");
-  Provider(2,"Ariani Valera", "0426-2705797");
+  Provider(29929240,"Oriana Moreno", "0414-7347068");
+  Provider(31180603,"Ariani Valera", "0426-2705797");
  
 };
 void loadProducts(){
@@ -716,11 +743,13 @@ void loadProducts(){
                     {6, providersid[1], 6800, 50, 10, "Beans"}};
   };
 void loadClients(){
-  Client c[] = {{29907856,"Jordano Pernia", "0414-3711282"},
-                {1,"Oriana Moreno", "0414-7347068"},
-                {2,"Ariani Valera", "0426-2705797"}};
+  Client(29907856,"Jordano Pernia", "0414-3711282");
+  Client(29929240,"Oriana Moreno", "0414-7347068");
+  Client(31180603,"Ariani Valera", "0426-2705797");         
 
 };
+
+// the programn starts here
 
 int main(){
 
@@ -739,7 +768,12 @@ int main(){
   client.open("client.dat",ios::binary | ios::out);
   client.close();
   loadClients();
-  
+
+  receipt.open("receipt.dat", ios::binary | ios::out);
+  receipt.close();
+
+  purc.open("purchase.dat", ios::binary | ios:: out);
+  purc.close();
 
   string rol, userName;
   bool user = false;
@@ -815,7 +849,7 @@ int main(){
           cout << "What do you want to do?" << endl;
           cout << "  1. Add a new product" << endl;
           cout << "  2. Edit a product" << endl;
-          cout << "  3. Delete a worker" << endl;
+          cout << "  3. Delete a product" << endl;
           cout << "  4. Exit" << endl;
           cout << "" << endl;
           cout << "Select one of the options above by entering it's number" << endl;
@@ -896,7 +930,6 @@ int main(){
             
           };
         };
-
         case 2:{
            int providerFlag = 1;
           while (providerFlag == 1)
@@ -961,8 +994,7 @@ int main(){
               
           };
 
-        }
-        
+        }        
         case 3:{
           int clientFlag = 1;
           while(clientFlag == 1){
@@ -982,15 +1014,8 @@ int main(){
               {
                 case 1: {
                   int anId;
-                  string aName, aPhone;
                   cout << "Enter the id of the new client: " << endl;
-                  cin >> anId;
-                  cout << "Enter the name of the new client: " << endl;
-                  cin >> aName;
-                  cout << "Enter the phone number of the new client: " << endl;
-                  cin >> aPhone;
-                  Client(anId, aName, aPhone);
-                  cout << "Operation succesfull, a new client was created." << endl;
+                  createClient(anId);
                   break;
                 }
                 case 2:{
@@ -1101,11 +1126,141 @@ int main(){
           cout << "Enter a correct option" << endl;
           break; 
         } 
-      
-        
       }
-
     }
+  }
+  else if(rol == "warehouse"){ 
+    cout << "----------------------------------------------------------------" << endl;
+    cout << "Welcome " << userName << endl;
+    cout << "What do you want to do?" << endl;
+    cout << "" << endl;
+
+    int warehouseFlag = 1;
+    while(warehouseFlag == 1)
+    {
+      cout << "  1. Add a new product" << endl;
+      cout << "  2. Edit a product" << endl;
+      cout << "  3. Exit" << endl;
+      cout << "" << endl;
+      cout << "Select one of the options above by entering it's number" << endl;
+
+      int productOption;
+      cin >> productOption;
+      switch(productOption)
+        {
+          case 1: {
+            int anId, aProviderId, aPrice, aStock, aMinStock;
+            string aDescription; 
+            cout << "Enter the id of the new product: " << endl;
+            cin >> anId;
+            int flag3 = 1;
+            while(flag3 == 1){
+              cout << "Enter the id of the provider: " << endl;
+              cin >> aProviderId;
+              // we need to check that the provider exits
+              Provider buf;
+              arc.open("provider.dat", ios::binary | ios::in);
+              while (1)
+              {
+                arc.read((char *)&buf,sizeof(buf));
+                if (arc.eof()){
+                  cout << "Provider not found" << endl;
+                  cout << "Enter an existing id" << endl;
+                  arc.close();
+                  break;
+                } 
+                if (buf.getProviderId() == aProviderId){
+                  flag3 = 0;
+                  break;
+                }
+              }
+            }
+            arc.close();
+            cout << "Enter the price of the new product: " << endl;
+            cin >> aPrice;
+            cout << "Enter the stock of the new product: " << endl;
+            cin >> aStock;
+            cout << "Enter the minimum stock of the new product: " << endl;
+            cin >> aMinStock;
+            cout << "Enter the description of the new product: " << endl;
+            cin >> aDescription;
+            Product(anId, aProviderId, aPrice, aStock, aMinStock, aDescription);
+            cout << "Operation succesfull, a new product was created." << endl;
+            break;
+          }
+          case 2:{
+              cout << "" << endl;
+              cout << "You chose to edit a product" << endl;
+              cout << "" << endl;
+              editProduct();
+              break;
+          }
+          default:{
+          break;
+          }
+        }
+          
+      cout << "" << endl;
+      cout << "Do you want to do further modifications?" << endl;
+      cout << "press 1 to continue, press any other number to end the program." << endl;
+      int productMenuEnd;
+      cin >> productMenuEnd;
+      if(productMenuEnd != 1){
+        warehouseFlag = 0;
+      };
+        
+    };
+  };
+  else if(rol == "cashier"){
+    cout << "----------------------------------------------------------------" << endl;
+    cout << "Welcome " << userName << endl;
+    cout << "The cash register is open" << endl;
+    cout << "" << endl;
+    int cashierFlag = 1;
+
+    while(cashierFlag == 1){
+      cout << "1. to procces a sale" << endl;
+      cout << "Any key. to close the cash reigster" << endl;
+
+      int cashierOption;
+      Client  buf;
+      switch (cashierOption)
+      {
+        case 1:{
+          int clientId;
+          bool clientCheck = false
+          cout << "Enter the client's id: " << endl;
+          cin >> clientId;
+          client.open("client.dat", ios:: binary | ios::in )
+          while (!clientCheck)
+          {
+            client.read((char *)&buf, sizeof(buf));
+            if(client.eof()){
+              cout << "Client not found on the database. Procces with their registration." << endl;
+              createClient(clientId);
+              clientCheck = true;
+            }
+            if(buf.getClientId() == clientId){
+              clientCheck = true;
+            }
+          }
+          client.close();
+
+          Receipt buff;
+          receipt.open("receipt.dat", ios::binary | ios:: in)
+          while(1){
+            receipt.read((char *)&buf, sizeof(buf));
+            if client
+          }
+
+
+        };    
+        default:{
+          cashierFlag = 0;
+          break;
+        };
+      };
+    };
   }
 
 
