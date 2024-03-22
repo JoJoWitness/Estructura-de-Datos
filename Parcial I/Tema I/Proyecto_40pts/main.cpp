@@ -503,7 +503,25 @@ void deleteProduct(){
       }
       
     };
-  }
+  };
+void editProductStock(int aIdtemp, int aStock)
+{
+  Product buf;
+    prod.open("product.dat", ios::in | ios::out | ios::binary);
+    while (1)
+    {
+      prod.read((char *)&buf,sizeof(buf));
+      if (buf.getProductId() == aIdtemp)
+      {
+        buf.setProductStock(aStock);
+    
+        prov.seekp(prov.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
+        prov.write((char *)&buf,sizeof(buf));
+        break;
+      }
+    } 
+  prod.close();  
+};
 
 class Client
 {
@@ -662,48 +680,35 @@ class Receipt: public Product
 
        
 };
-class Purchase : public Product
+class Purchase
 {
-Product buf;
-
     private:
-        int id;
+        char id[5];
         int id_product;
-        int id_client;
+        char id_receipt[5];
         int quantity;
     public:
-        Purchase(int aId, int aId_product, int aId_Client, int aQuantity) {
+      Purchase(string anId, int aId_product, string aId_receipt , int aQuantity) {
+        strcpy(id, anId.c_str());
+        id_product = aId_product; 
+        strcpy(id_receipt, aId_receipt.c_str());
+        quantity = aQuantity;
 
-            prod.open("product.dat",ios::binary | ios::in);
-            
-            while(1)
-            {
-              prod.read((char *)&buf,sizeof(buf));
-              if (prod.eof()) break;
-              if (buf.getProductId() == aId_product){
-                if(buf.checkStock(quantity)){
-
-                      id = aId;
-                      id_product = buf.getProductId(); 
-                      id_client = aId_Client;
-                      quantity = aQuantity;
-
-                    purc.open("purchase.dat",ios::binary | ios::app);
-                    purc.write(reinterpret_cast<char *>(this),sizeof(*this));
-                    purc.close();
-                };
-             
-              }
-              else{
-                cout << "We don't have enough stock for this product" << endl;
-              };
-            };
-
-            purc.close();
+        purc.open("purchase.dat",ios::binary | ios::app);
+        purc.write(reinterpret_cast<char *>(this),sizeof(*this));
+        purc.close();
         };
-
         
 };
+
+string createRandomId(){
+  string r = to_string(rand() % 11);
+  char a = 97 + rand() % 26;
+  char nd = 65 + rand() % 26;
+  string anId = (r + a + nd);
+
+  return anId;
+}
 
 void loadWorkers(){
   Worker(29907856,"Jordano" , "admi", "ryuk");
@@ -1210,7 +1215,7 @@ int main(){
       };
         
     };
-  };
+  }
   else if(rol == "cashier"){
     cout << "----------------------------------------------------------------" << endl;
     cout << "Welcome " << userName << endl;
@@ -1219,16 +1224,17 @@ int main(){
     int cashierFlag = 1;
 
     while(cashierFlag == 1){
+      int cashierOption;
       cout << "1. to procces a sale" << endl;
       cout << "Any key. to close the cash reigster" << endl;
-
-      int cashierOption;
+      cin >> cashierOption;
+      
       Client  buf;
       switch (cashierOption)
       {
         case 1:{
           int clientId;
-          bool clientCheck = false
+          bool clientCheck = false;
 
           string r = to_string(rand() % 11);
           char a = 97 + rand() % 26;
@@ -1254,38 +1260,57 @@ int main(){
           Receipt(anId, clientId);
           
           int quantity, productId, productQuantity;
-          bool productFound = false;
+          
           cout << "How many items does the client bought?" << endl;
           cin >> quantity;
           
           for(int i = 0; i < quantity; i++){
+            bool productFound = false;
             while(!productFound)
             {
-              Product buffe
+              Product buffe;
               cout << "Enter the id of the product: " << endl;
               cin >> productId;
               prod.open("product.dat", ios::binary | ios::in);
               while(1)
               {
-                prod.read((char *)&buf,sizeof(buf));
+              prod.read((char *)&buffe,sizeof(buffe));
                 if(prod.eof()){
                   cout << "Product not found" << endl;
                   cout << "Enter an existing id" << endl;
                   break;
                 } 
                 if(buffe.getProductId() == productId){
+                  while(1){
+                    cout << "Enter the quantity of the product: " << endl;
+                    cin >> productQuantity;
+                    if(buffe.checkStock(productQuantity)){
+                       cout << "rus1" << endl;
+                      editProductStock(productId, productQuantity);
+                       cout << "rus2" << endl;
+                      string purchaseId = createRandomId();
+                      cout << "rus7" << endl;
+                      Purchase(purchaseId, productId, anId, productQuantity);
+                      cout << "rus8" << endl;
+                      cout << "rus3" << endl;
+                      break;
+                    }
+                    else{
+                      cout << "We don't have enough stock for this product" << endl;
+                      cout << "Please enter a valid quantity" << endl;
+                      cout << "" << endl;
+                    }
+                     cout << "rus4" << endl;
+                  }
+                   cout << "rus5" << endl;
                   productFound = true;
+                  break;
                 }
+              
               }
               prod.close();
-            
-            
             };
-
-           
-
           }
-
         };    
         default:{
           cashierFlag = 0;
