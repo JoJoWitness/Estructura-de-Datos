@@ -340,8 +340,12 @@ class Product : public Provider
 
 
       void setProductStock(int aStock){
-        stock -= aStock;
+        stock = aStock;
       };
+
+      void decreaseProductStock(int aStock){
+        stock = stock - aStock;
+      }
 
       bool checkStock(int quantity){
         if(stock > quantity) return true;
@@ -504,23 +508,27 @@ void deleteProduct(){
       
     };
   };
-void editProductStock(int aIdtemp, int aStock)
-{
-  Product buf;
-    prod.open("product.dat", ios::in | ios::out | ios::binary);
+void editProductStock(int aIdtemp, int aStock){
+  Product buff;
+    arc.open("product.dat", ios::in | ios::out | ios::binary);
+    arc.seekg(0 , ios::beg);
     while (1)
     {
-      prod.read((char *)&buf,sizeof(buf));
-      if (buf.getProductId() == aIdtemp)
+      arc.read((char *)&buff,sizeof(buff));
+      if(arc.eof()) {
+        cout <<"No hubo ningun ru \n\n\n\n\n\n\n\n\n\n\n" <<endl;
+      }
+      if (buff.getProductId() == aIdtemp)
       {
-        buf.setProductStock(aStock);
+        buff.decreaseProductStock(aStock);
+        cout << buff.getProductStock() << endl;
     
-        prov.seekp(prov.tellg() - static_cast<std::streamoff>(sizeof(buf)), std::ios_base::beg);
-        prov.write((char *)&buf,sizeof(buf));
+        arc.seekp(arc.tellg() - static_cast<std::streamoff>(sizeof(buff)), std::ios_base::beg);
+        arc.write((char *)&buff,sizeof(buff));
         break;
       }
     } 
-  prod.close();  
+  arc.close();  
 };
 
 class Client
@@ -1285,14 +1293,12 @@ int main(){
                     cout << "Enter the quantity of the product: " << endl;
                     cin >> productQuantity;
                     if(buffe.checkStock(productQuantity)){
-                       cout << "rus1" << endl;
+                       cout << buffe.getProductStock() << endl;
                       editProductStock(productId, productQuantity);
-                       cout << "rus2" << endl;
+                       cout << buffe.getProductStock() << endl;
                       string purchaseId = createRandomId();
-                      cout << "rus7" << endl;
                       Purchase(purchaseId, productId, anId, productQuantity);
-                      cout << "rus8" << endl;
-                      cout << "rus3" << endl;
+         
                       break;
                     }
                     else{
@@ -1300,9 +1306,7 @@ int main(){
                       cout << "Please enter a valid quantity" << endl;
                       cout << "" << endl;
                     }
-                     cout << "rus4" << endl;
                   }
-                   cout << "rus5" << endl;
                   productFound = true;
                   break;
                 }
