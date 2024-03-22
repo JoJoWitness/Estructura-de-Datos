@@ -562,16 +562,16 @@ class Client
 {
 private:
     int id;
-    char name[50], address[50], phone[14];
+    char name[50], address[50], phone[14], address[50];
 
 public:
     Client(){};
-    Client(int aId, string aName, string aPhone)
+    Client(int aId, string aName, string aPhone, string anAddress)
     {
         id = aId;
-        strcmp(name, aName.c_str());
-        strcmp(phone, aPhone.c_str());
-
+        strcpy(name, aName.c_str());
+        strcpy(phone, aPhone.c_str());
+        strcpy(address, anAddress.c_str());
         client.open("client.dat", ios::binary | ios::app);
         client.write(reinterpret_cast<char *>(this), sizeof(*this));
         client.close();
@@ -678,12 +678,14 @@ void deleteClient()
 }
 void createClient(int anId)
 {
-    string aName, aPhone;
+    string aName, aPhone, anAddress;
     cout << "Enter the name of the new client: " << endl;
     cin >> aName;
     cout << "Enter the phone number of the new client: " << endl;
     cin >> aPhone;
-    Client(anId, aName, aPhone);
+    cout << "Enter the addres of the new client: " << endl;
+    cin >> anAddress;
+    Client(anId, aName, aPhone, anAddress);
     cout << "Operation succesfull, a new client was created." << endl;
 }
 
@@ -786,9 +788,9 @@ void loadProducts()
 };
 void loadClients()
 {
-    Client(29907856, "Jordano Pernia", "0414-3711282");
-    Client(29929240, "Oriana Moreno", "0414-7347068");
-    Client(31180603, "Ariani Valera", "0426-2705797");
+    Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
+    Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
+    Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
 };
 
 // the programn starts here
@@ -851,6 +853,7 @@ int main()
                 rol = buf.getWorkerRol();
                 user = true;
                 userName = buf.getWorkerName();
+                break;
             };
         }
         work.close();
@@ -1312,7 +1315,7 @@ int main()
             case 1:
             {
                 int clientId;
-                bool clientCheck = false;
+                bool clientCheck;
 
                 string r = to_string(rand() % 11);
                 char a = 97 + rand() % 26;
@@ -1323,21 +1326,27 @@ int main()
                 cin >> clientId;
                 client.open("client.dat", ios::binary | ios::in);
                 client.seekg(0, ios::beg);
-                while (!clientCheck)
+                while (1)
                 {
                     client.read((char *)&buf, sizeof(buf));
                     if (client.eof())
                     {
                         cout << "Client not found on the database. Procces with their registration." << endl;
-                        createClient(clientId);
-                        clientCheck = true;
+                        
+                        clientCheck = false;
+                        break;
                     }
                     if (buf.getClientId() == clientId)
                     {
                         clientCheck = true;
+                        break;
                     }
                 }
                 client.close();
+
+                if(!clientCheck){
+                    createClient(clientId);
+                }
                 Receipt(anId, clientId);
 
                 int quantity, productId, productQuantity;
