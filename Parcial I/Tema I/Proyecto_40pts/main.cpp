@@ -635,33 +635,33 @@ void createClient(int anId){
 class Receipt: public Product
 {
   time_t unparsedDate = time(0);
+
+
+
     private:
-        int id;
+        char id[5];
         int id_client;
         char* date;
     public:
         Receipt() {};
-        Receipt(int aId, int aId_client) {
-            id = aId;
+        Receipt(string anId, int aId_client) {
+            strcpy(id, anId.c_str());
             id_client = aId_client;
             date = asctime(localtime(&unparsedDate));
             
-
             receipt.open("receipt.dat",ios::binary | ios::app);
             receipt.write(reinterpret_cast<char *>(this),sizeof(*this));
             receipt.close();
         };
 
-        int getReceiptId(){
+        char *getReceiptId() {
           return id;
         }
 
+
+
        
 };
-void createReceipt(int anId, int aClientId){
-  Receipt(anId, aClientId);
-}
-
 class Purchase : public Product
 {
 Product buf;
@@ -1229,9 +1229,15 @@ int main(){
         case 1:{
           int clientId;
           bool clientCheck = false
+
+          string r = to_string(rand() % 11);
+          char a = 97 + rand() % 26;
+          char nd = 65 + rand() % 26;
+          string anId = (r + a + nd);
+
           cout << "Enter the client's id: " << endl;
           cin >> clientId;
-          client.open("client.dat", ios:: binary | ios::in )
+          client.open("client.dat", ios:: binary | ios::in );
           while (!clientCheck)
           {
             client.read((char *)&buf, sizeof(buf));
@@ -1245,14 +1251,40 @@ int main(){
             }
           }
           client.close();
+          Receipt(anId, clientId);
+          
+          int quantity, productId, productQuantity;
+          bool productFound = false;
+          cout << "How many items does the client bought?" << endl;
+          cin >> quantity;
+          
+          for(int i = 0; i < quantity; i++){
+            while(!productFound)
+            {
+              Product buffe
+              cout << "Enter the id of the product: " << endl;
+              cin >> productId;
+              prod.open("product.dat", ios::binary | ios::in);
+              while(1)
+              {
+                prod.read((char *)&buf,sizeof(buf));
+                if(prod.eof()){
+                  cout << "Product not found" << endl;
+                  cout << "Enter an existing id" << endl;
+                  break;
+                } 
+                if(buffe.getProductId() == productId){
+                  productFound = true;
+                }
+              }
+              prod.close();
+            
+            
+            };
 
-          Receipt buff;
-          receipt.open("receipt.dat", ios::binary | ios:: in)
-          while(1){
-            receipt.read((char *)&buf, sizeof(buf));
-            if client
+           
+
           }
-
 
         };    
         default:{
