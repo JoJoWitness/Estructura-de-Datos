@@ -392,12 +392,12 @@ public:
             return false;
     };
 
-    void checkReStock()
+    bool checkReStock()
     {
         if (stock < stock_min)
-        {
-            reStock();
-        }
+            return true;
+        else
+            return false;
     };
 
     void reStock()
@@ -413,7 +413,7 @@ public:
                 string providerName = buf.getProviderName();
                 string providerPhone = buf.getProviderPhone();
 
-                string requestDocTitle = "restockOrder_" + to_string(id) + ".dat";
+                string requestDocTitle = "restockOrder_" + to_string(id) + ".txt";
                 string requestDocContent = "We need to restock the product with id: " + to_string(id) + "\nWe need 100 units of it.\n";
                 string requestDocProviderData = "Send to provider: " + providerName + "\nVia: " + providerPhone + ".";
                 
@@ -422,8 +422,8 @@ public:
                 file << requestDocProviderData;
                 file.close();
             }
-        }
-        prov.close()
+        };
+        prov.close();
     };
 };
 void editProduct()
@@ -1411,6 +1411,20 @@ int main()
                 break;
             };
             };
+        
+            Product buffer;
+            prod.open("product.dat", ios::binary | ios::in);
+            while(1)
+            {
+                prod.read((char *)&buf, sizeof(buf));
+                if(prod.eof()){
+                    cout << "Thank you for your work" << endl;
+                    break;
+                }
+                if(buffer.checkReStock()){
+                    buffer.reStock();
+                }
+            }
         };
     }
 
