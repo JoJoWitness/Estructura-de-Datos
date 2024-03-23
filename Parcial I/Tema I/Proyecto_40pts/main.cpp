@@ -1,8 +1,9 @@
 #include <iostream>
 #include <time.h>
-#include <string.h>
 #include <string>
+#include <string.h>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ private:
     char g[2] = "0";
 
 public:
-    Worker(){};
+    Worker() = default;
     Worker(int aId, string aName, string aRol, string aPassword)
     {
         id = aId;
@@ -178,7 +179,7 @@ private:
     char phone[14];
 
 public:
-    Provider(){};
+    Provider()=default;
     Provider(int aId, string aName, string aPhone)
     {
         id = aId;
@@ -409,19 +410,20 @@ public:
                 break;
             if (buf.getProviderId() == id_provider)
             {
-                char *providerName = buf.getProviderName();
-                char *providerPhone = buf.getProviderPhone();
+                string providerName = buf.getProviderName();
+                string providerPhone = buf.getProviderPhone();
 
                 string requestDocTitle = "restockOrder_" + to_string(id) + ".dat";
-                string requestDocContent = "We need to restock the product with id: " + to_string(id);
-
-                arc.open(requestDocTitle, ios::binary | ios::out);
-                arc.write((char *)&providerName, sizeof(providerName));
-                arc.write((char *)&providerPhone, sizeof(providerPhone));
-
-                arc.close();
+                string requestDocContent = "We need to restock the product with id: " + to_string(id) + "\nWe need 100 units of it.\n";
+                string requestDocProviderData = "Send to provider: " + providerName + "\nVia: " + providerPhone + ".";
+                
+                ofstream file(requestDocTitle);
+                file << requestDocContent;
+                file << requestDocProviderData;
+                file.close();
             }
         }
+        prov.close()
     };
 };
 void editProduct()
@@ -562,10 +564,10 @@ class Client
 {
 private:
     int id;
-    char name[50], address[50], phone[14], address[50];
+    char name[50], address[50], phone[14];
 
 public:
-    Client(){};
+    Client()=default;
     Client(int aId, string aName, string aPhone, string anAddress)
     {
         id = aId;
@@ -699,7 +701,7 @@ private:
     char *date;
 
 public:
-    Receipt(){};
+    Receipt()=default;
     Receipt(string anId, int aId_client)
     {
         strcpy(id, anId.c_str());
