@@ -1,0 +1,4 @@
+We need to restock the product with id: 1
+We need 100 units of it.
+Send to provider: Jordano Pernia
+Via: 0414-3711282.

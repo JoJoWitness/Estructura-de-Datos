@@ -4,10 +4,14 @@
 #include <string.h>
 #include <fstream>
 #include <stdlib.h>
+#include <cstdlib>
+#include <iomanip>
 
 using namespace std;
 
-// First, we build an object for each of the table of the DB, as an extract table for the workers
+// First, we build an object for each of the table ofs the DB, as an extract table for the workers
+//No incluimos la edicion de facturas ni compras, porque es un negocio de verdad eso seria catalogado como fraude fiscal
+//Por lo que decidimos centrarnos en las maneras en que funcionaria un sistema en la vida real.
 fstream work, prov, prod, client, receipt, purc, arc;
 class Worker
 {
@@ -17,10 +21,8 @@ private:
     char rol[10];
     char password[8];
 
-    char g[2] = "0";
-
 public:
-    Worker() = default;
+    Worker(){};
     Worker(int aId, string aName, string aRol, string aPassword)
     {
         id = aId;
@@ -179,7 +181,7 @@ private:
     char phone[14];
 
 public:
-    Provider()=default;
+    Provider(){};
     Provider(int aId, string aName, string aPhone)
     {
         id = aId;
@@ -412,12 +414,12 @@ public:
             {
                 string providerName = buf.getProviderName();
                 string providerPhone = buf.getProviderPhone();
-
-                string requestDocTitle = "restockOrder_" + to_string(id) + ".txt";
-                string requestDocContent = "We need to restock the product with id: " + to_string(id) + "\nWe need 100 units of it.\n";
+                string desc = description;
+                string requestDocTitle = "restockOrder_" + desc + ".txt";
+                string requestDocContent = "We need to restock the product: " + desc + "\nWe need 100 units of it.\n";
                 string requestDocProviderData = "Send to provider: " + providerName + "\nVia: " + providerPhone + ".";
                 
-                ofstream file(requestDocTitle);
+                ofstream file(requestDocTitle.c_str());
                 file << requestDocContent;
                 file << requestDocProviderData;
                 file.close();
@@ -567,7 +569,7 @@ private:
     char name[50], address[50], phone[14];
 
 public:
-    Client()=default;
+    Client(){};
     Client(int aId, string aName, string aPhone, string anAddress)
     {
         id = aId;
@@ -696,15 +698,15 @@ class Receipt : public Product
     time_t unparsedDate = time(0);
 
 private:
-    char id[5];
+    int id;
     int id_client;
     char *date;
 
 public:
-    Receipt()=default;
-    Receipt(string anId, int aId_client)
+Receipt(){};
+    Receipt(int anId, int aId_client)
     {
-        strcpy(id, anId.c_str());
+        id = anId;
         id_client = aId_client;
         date = asctime(localtime(&unparsedDate));
 
@@ -713,7 +715,7 @@ public:
         receipt.close();
     };
 
-    char *getReceiptId()
+    int getReceiptId()
     {
         return id;
     }
@@ -721,17 +723,17 @@ public:
 class Purchase
 {
 private:
-    char id[5];
+    int id;
     int id_product;
-    char id_receipt[5];
+    int id_receipt;
     int quantity;
 
 public:
-    Purchase(string anId, int aId_product, string aId_receipt, int aQuantity)
+    Purchase(int anId, int aId_product, int aId_receipt, int aQuantity)
     {
-        strcpy(id, anId.c_str());
+        id = anId;
         id_product = aId_product;
-        strcpy(id_receipt, aId_receipt.c_str());
+        id_receipt = aId_receipt;
         quantity = aQuantity;
 
         purc.open("purchase.dat", ios::binary | ios::app);
@@ -740,15 +742,15 @@ public:
     };
 };
 
-string createRandomId()
-{
-    string r = to_string(rand() % 11);
-    char a = 97 + rand() % 26;
-    char nd = 65 + rand() % 26;
-    string anId = (r + a + nd);
+// string createRandomId()
+// {
+//     string r = to_string(rand() % 11);
+//     char a = 97 + rand() % 26;
+//     char nd = 65 + rand() % 26;
+//     string anId = (r + a + nd);
 
-    return anId;
-}
+//     return anId;
+// }
 
 void loadWorkers()
 {
@@ -1319,10 +1321,8 @@ int main()
                 int clientId;
                 bool clientCheck;
 
-                string r = to_string(rand() % 11);
-                char a = 97 + rand() % 26;
-                char nd = 65 + rand() % 26;
-                string anId = (r + a + nd);
+                
+                int anId = rand();
 
                 cout << "Enter the client's id: " << endl;
                 cin >> clientId;
@@ -1385,7 +1385,7 @@ int main()
                                         buffe.decreaseProductStock(productQuantity);
                                         prod.seekp(prod.tellg() - static_cast<std::streamoff>(sizeof(buffe)), std::ios_base::beg);
                                         prod.write((char *)&buffe, sizeof(buffe));
-                                        string purchaseId = createRandomId();
+                                        int purchaseId = rand()*10;
                                         Purchase(purchaseId, productId, anId, productQuantity);
                                         break;
                                     }
