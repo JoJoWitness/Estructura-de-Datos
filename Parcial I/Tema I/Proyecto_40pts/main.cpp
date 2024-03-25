@@ -18,7 +18,10 @@ using namespace std;
 // 29907856 Jordano Pernia
 // 29929240 Oriana Moreno
 // 31180603 Ariani Valera
-//
+
+//Recomendaciones:
+//* Para facilitar la busqueda de datos al momento de entrar al sistema y hacer un resgitro o midificacion
+//  revisar la seccion del codigo desde las lineas 687 a la 720
 
 fstream work, prov, prod, client, receipt, purc, arc;
 class Worker{
