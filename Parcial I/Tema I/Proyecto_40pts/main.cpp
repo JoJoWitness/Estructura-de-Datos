@@ -796,7 +796,7 @@ int main(){
         }
 
         cout << "----------------------------------------------------------------" << endl;
-        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
+        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
         cin >> flag1;
     }
 
@@ -900,7 +900,7 @@ int main(){
                 }
                     cout << "\n----------------------------------------------------------------" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
                     int productMenuEnd;
                     cin >> productMenuEnd;
                     if (productMenuEnd != 1){
@@ -1025,7 +1025,7 @@ int main(){
                 }
                     cout << "----------------------------------------------------------------\n" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir." << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa." << endl;
                     int clientMenuEnd;
                     cin >> clientMenuEnd;
                     if (clientMenuEnd != 1){
@@ -1194,7 +1194,7 @@ int main(){
             }
             cout << "\n----------------------------------------------------------------" << endl;
             cout << "\nDesea realizar otras modificaciones?" << endl;
-            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
+            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa." << endl;
             int productMenuEnd;
             cin >> productMenuEnd;
             if (productMenuEnd != 1){
@@ -1259,7 +1259,7 @@ int main(){
                     bool productFound = false;
                     while (!productFound){
                         Product buffe;
-                        cout << "\nIngrese el id del producto: " << endl;
+                        cout << "\nIngrese el id del producto "<<i+1<<": " << endl;
                         cin >> productId;
                         prod.open("product.dat", ios::in | ios::out | ios::binary);
                         prod.seekg(0, ios::beg);
@@ -1282,12 +1282,11 @@ int main(){
                                         Purchase(purchaseId, productId, anId, productQuantity);
 
                                         system("cls");
-                                        cout << "----------------------------------------" << endl;
-                                        cout << "--------- PRODUCTOS VENDIDOS -----------" << endl;
-                                        cout << productQuantity << " " << buffe.getProductDescription() << endl;
-                                        cout << "----------------------------------------\n" << endl;
-                                       
-
+                                        cout << "\n----------------------------------------------------------------" << endl;
+                                        cout << "---------------------- PRODUCTOS VENDIDOS ----------------------" << endl;
+                                        cout << "\n Cantidad"<<"\t\tDescripcion" <<"\t\t  Monto total\n"<< endl;
+                                        cout << " "<<productQuantity << " \t\t\t" << buffe.getProductDescription()<< "\t\t  "<<buffe.getProductPrice()*productQuantity <<" .Cop."<< endl;
+                                        cout << "\n----------------------------------------------------------------" << endl;
                                         break;
                                     }
                                     else{
