@@ -1285,7 +1285,7 @@ int main(){
                                         cout << "----------------------------------------" << endl;
                                         cout << "--------- PRODUCTOS VENDIDOS -----------" << endl;
                                         cout << productQuantity << " " << buffe.getProductDescription() << endl;
-                                        cout << "----------------------------------------" << endl;
+                                        cout << "----------------------------------------\n" << endl;
                                        
 
                                         break;
