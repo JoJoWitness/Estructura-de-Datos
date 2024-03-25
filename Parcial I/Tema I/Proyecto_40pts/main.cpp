@@ -13,6 +13,13 @@ using namespace std;
 //No incluimos la edicion de facturas ni compras, porque es un negocio de verdad eso seria catalogado como fraude fiscal
 //Por lo que decidimos centrarnos en las maneras en que funcionaria un sistema en la vida real.
 
+
+// Integrantes
+// 29907856 Jordano Pernia
+// 29929240 Oriana Moreno
+// 31180603 Ariani Valera
+//
+
 fstream work, prov, prod, client, receipt, purc, arc;
 class Worker{
 	private:
