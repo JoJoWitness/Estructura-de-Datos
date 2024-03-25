@@ -120,7 +120,7 @@ void editWorker(){
             cout << "\nTrabajador no encontrado" << endl;
         }
 
-        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag2;
     };
 }
@@ -155,7 +155,7 @@ void deleteWorker(){
         }
 		else{
             cout << "\nTrabajador no encontrado" << endl;
-            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
     };
@@ -234,7 +234,7 @@ void editProvider(){
             cout << "Proveedor no encontrado" << endl;
         };
 
-        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         int providerFlag;//////////////////////
         cin >> providerFlag;
         if(providerFlag!=1){
@@ -274,7 +274,7 @@ void deleteProvider(){
         }
         else{
             cout << "Proveedor no encontrado" << endl;
-            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
     };
@@ -465,7 +465,7 @@ void editProduct(){
             cout << "\nProducto no encontrado" << endl;
         }
 
-        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag2;
     };
 }
@@ -500,7 +500,7 @@ void deleteProduct(){
         }
         else{
             cout << "\nProducto no encontrado" << endl;
-            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
     };
@@ -572,7 +572,7 @@ void editClient(){
             cout << "\nCliente no encontrado" << endl;
         }
 
-        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag2;
     };
 }
@@ -605,7 +605,7 @@ void deleteClient(){
         }
         else{
             cout << "\nCliente no encontrado" << endl;
-            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
         cout<<"\nCliente eliminado exitosamente"<<endl;///////
@@ -796,7 +796,7 @@ int main(){
         }
 
         cout << "----------------------------------------------------------------" << endl;
-        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag1;
     }
 
@@ -900,7 +900,7 @@ int main(){
                 }
                     cout << "\n----------------------------------------------------------------" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
                     int productMenuEnd;
                     cin >> productMenuEnd;
                     if (productMenuEnd != 1){
@@ -966,7 +966,7 @@ int main(){
                     }
                 }
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
                     int providerMenuEnd;
                     cin >> providerMenuEnd;
                     if (providerMenuEnd != 1){
@@ -1025,7 +1025,7 @@ int main(){
                 }
                     cout << "----------------------------------------------------------------\n" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir." << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir." << endl;
                     int clientMenuEnd;
                     cin >> clientMenuEnd;
                     if (clientMenuEnd != 1){
@@ -1094,7 +1094,7 @@ int main(){
                     }
                 }
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir." << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir." << endl;
                     int workerMenuEnd;
                     cin >> workerMenuEnd;
                     if (workerMenuEnd != 1){
@@ -1194,7 +1194,7 @@ int main(){
             }
             cout << "\n----------------------------------------------------------------" << endl;
             cout << "\nDesea realizar otras modificaciones?" << endl;
-            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir del programa" << endl;
+            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
             int productMenuEnd;
             cin >> productMenuEnd;
             if (productMenuEnd != 1){
