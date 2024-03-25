@@ -1208,13 +1208,13 @@ int main(){
         system("cls");
         cout << "----------------------------------------------------------------" << endl;
         cout << "--------------------- Bienvenido " << userName <<" ------------------------"<<endl;
-        cout << "----------------------------------------------------------------" << endl;
-        cout << "\nLa caja registradora esta abierta" << endl;
 
         int cashierFlag = 1;
         while (cashierFlag == 1){
             
             int cashierOption;
+	    cout << "----------------------------------------------------------------" << endl;
+            cout << "\nLa caja registradora esta abierta" << endl;
             cout << "\n1. Realizar una venta" << endl;
             cout << "2. Salir" << endl;
             cout << "\nSeleccione una de las opciones ingresando su numero" << endl;
@@ -1281,7 +1281,9 @@ int main(){
                                         int purchaseId = rand()*10;
                                         Purchase(purchaseId, productId, anId, productQuantity);
 
+                                        system("cls");
                                         cout << "----------------------------------------" << endl;
+                                        cout << "--------- PRODUCTOS VENDIDOS -----------" << endl;
                                         cout << productQuantity << " " << buffe.getProductDescription() << endl;
                                         cout << "----------------------------------------" << endl;
                                        
