@@ -723,17 +723,136 @@ void loadProducts(){
                     {3, providersid[2], 4500, 90, 10, "Azucar"},
                     {4, providersid[1], 5500, 70, 5, "Pasta"},
                     {5, providersid[0], 4200, 60, 155, "Arroz"},
+                    {6, providersid[1], 6800, 50, 10, "Caraotas"},
+                    {7, providersid[2], 2000, 30, 10 , "Galletas"},
+                    {8, providersid[0], 3000, 70, 10, "Frijoles"},
+                    {9, providersid[1], 1000, 50, 10, "Gelatina"},
+                    {10, providersid[2], 2000, 30, 10 , "Arvejas Verdes"},
+                    {11, providersid[0], 3000, 70, 10, "Arvejas Amarillas"},
+                    {12, providersid[1], 6500, 60, 15, "Cafe"},
+                    {13, providersid[2], 4500, 90, 10, "Te"},
+                    {14, providersid[1], 5500, 70, 5, "Desodorante"},
+                    {15, providersid[0], 4200, 60, 155, "Crema de dental"},
+                    {16, providersid[1], 6800, 50, 10, "Papel Higienico"},
+                    {17, providersid[2], 2000, 30, 10 , "Colitas"},
+                    {18, providersid[0], 3000, 70, 10, "Chupetas"},
+                    {19, providersid[1], 1000, 50, 10, "Caramelos de cafe"},
+                    {20, providersid[2], 2000, 30, 10 , "Caramelos de mantequilla"},
+                    {21, providersid[0], 3000, 70, 10, "Carne de Res"},
+                    {22, providersid[1], 6500, 60, 15, "Pollo"},
+                    {23, providersid[2], 4500, 90, 10, "Carne de Cochino"},
+                    {24, providersid[1], 5500, 70, 5, "Levadura"},
+                    {25, providersid[0], 4200, 60, 155, "Polvo de Hornear"},
+                    {26, providersid[1], 6800, 50, 10, "Chocolate"},
+                    {27, providersid[2], 2000, 30, 10 , "Chocolate de reposteria"},
+                    {28, providersid[0], 3000, 70, 10, "Baterias AAA"},
+                    {29, providersid[1], 1000, 50, 10, "Baterias AA"},
+                    {30, providersid[2], 2000, 30, 10 , "Baterias 9V"},
+                    {31, providersid[0], 3000, 70, 10, "Gomitas"},
+                    {32, providersid[1], 6500, 60, 15, "Masmelos"},
+                    {33, providersid[2], 4500, 90, 10, "Jamon"},
+                    {34, providersid[1], 5500, 70, 5, "Queso"},
+                    {35, providersid[0], 4200, 60, 155, "Tocineta"},
+                    {36, providersid[1], 6800, 50, 10, "Alcaparras"},
+                    {37, providersid[2], 2000, 30, 10 , "Papel Aluminio"},
+                    {38, providersid[0], 3000, 70, 10, "Aceitunas"},
+                    {39, providersid[1], 1000, 50, 10, "Onoto"},
+                    {40, providersid[2], 2000, 30, 10 , "Pasas"},
+                    {41, providersid[0], 3000, 70, 10, "Garbanzos"},
+                    {42, providersid[1], 6500, 60, 15, "Oregano"},
+                    {43, providersid[2], 4500, 90, 10, "Albahaca"},
+                    {44, providersid[1], 5500, 70, 5, "Comino"},
+                    {45, providersid[0], 4200, 60, 155, "Curry"},
+                    {46, providersid[1], 6800, 50, 10, "Laurel"},
+                    {47, providersid[2], 2000, 30, 10 , "Paprika"},
+                    {48, providersid[0], 3000, 70, 10, "Pimienta"},
+                    {49, providersid[1], 1000, 50, 10, "Romero"},
+                    {50, providersid[2], 2000, 30, 10 , "Menta"},
+                    {51, providersid[0], 3000, 70, 10, "Hierbabuena"},
+                    {52, providersid[1], 6500, 60, 15, "Limonaria"},
+                    {53, providersid[2], 4500, 90, 10, "Manzanilla"},
+                    {54, providersid[1], 5500, 70, 5, "Lavanda"},
+                    {55, providersid[0], 4200, 60, 155, "Pico de loro"},
+                    {56, providersid[1], 6800, 50, 10, "Frijol Chino"},
+                    {57, providersid[2], 2000, 30, 10 , "Lapices"},
+                    {58, providersid[0], 3000, 70, 10, "Cuadernos"},
+                    {59, providersid[1], 1000, 50, 10, "Marcadores"},
+                    {60, providersid[2], 2000, 30, 10 , "Malta"},
                     };
 };
 
 void loadClients(){
+    // Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
+    // Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
+    // Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
+
     Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
     Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
     Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
+    Client(4, "Luz D'Santiago", "0414-1234567", "La Popita");
+    Client(5, "Javier Pernia", "0414-1234567", "La Normal");
+    Client(6, "Carmen Niño", "0414-1234567", "La Normal");
+    Client(7, "Octaviano Pernia", "0414-1234567", "La Normal");
+    Client(8, "Ryuk", "0414-1234567", "La normal");
+    Client(9, "Orianna Villamizar", "0414-1234567", "La Concordia");
+    Client(10, "Raymond Bravo", "0414-1234567", "Pueblo Nuevo");
+    Client(11, "Francisco Vargas", "0414-1234567", "Pueblo Nuevo");
+    Client(12, "Jhaisam Ferreira", "0414-1234567", "Los Agustinos");
+    Client(13, "Hillary Alvarado", "0414-1234567", "La Concordia");
+    Client(14, "Aisskel Duarte", "0414-1234567", "Rubio");
+    Client(15, "Osmar Porras", "0414-1234567", "Santa Teresa");
+    Client(16, "Gabriel Galan", "0414-1234567", "Los Naranjos");
+    Client(17, "Pelusa", "0414-1234567", "La Popita");
+    Client(18, "Campana", "0414-1234567", "La Popita");
+    Client(19, "Pablo Vivas", "0414-1234567", "España");
+    Client(20, "Alicia Apolinar", "0414-1234567", "La Normal");
+    Client(21, "Andrea Barrios", "0414-1234567", "Pueblo Nuevo");
+    Client(22, "Arturo Tascon", "0414-1234567", "Cordero");
+    Client(23, "Rafael Bastidas", "0414-1234567", "Avenida Libertador");
+    Client(24, "Gerardo Squillaro", "0414-1234567", "Pirineos");
+    Client(25, "Augusto Montoya", "0414-1234567", "La Popita");
+    Client(26, "Dickson", "0414-1234567", "Rubio");
+    Client(27, "Juan Pulido", "0414-1234567", "Guasdulito");
+    Client(28, "Antonio Gomez", "0414-1234567", "Paris");
+    Client(29, "Javier Parra", "0414-1234567", "Paris");
+    Client(30, "Xander Azuaje", "0414-1234567", "Madrid");
+    Client(31, "Camila Uribe", "0414-1234567", "Utah");
+    Client(32, "Liz Ramirez", "0414-1234567", "Idaho");
+    Client(33, "Valentina Cornago", "0414-1234567", "Merida");
+    Client(34, "Marisabel Urbina", "0414-1234567", "La Rotaria");
+    Client(35, "Sebastian Mora", "0414-1234567", "Las Acacias");
+    Client(36, "Mariangel Guerraro", "0414-1234567", "Tariba");
+    Client(37, "Victor Maldonado", "0414-1234567", "Barrio Sucre");
+    Client(38, "Joseph Colmenares", "0414-1234567", "La Concordia");
+    Client(39, "Ana Sandoval", "0414-1234567", "La Normal");
+    Client(40, "Sofia Bonilla", "0414-1234567", "New York");
+    Client(41, "Mariana Duque", "0414-1234567", "Avenida Libertador");
+    Client(42, "Miguel Ramirez", "0414-1234567", "Tariba");
+    Client(43, "Francisco Adrianza", "0414-1234567", "La Normal");
+    Client(44, "Franklin Ortiz", "0414-1234567", "Las Acacias");
+    Client(45, "Arturo Diaz", "0414-1234567", "California");
+    Client(46, "Maria Perez", "0414-1234567", "Los Naranjos");
+    Client(47, "Luisa Cardenas", "0414-1234567", "Cueva del Oso");
+    Client(48, "Maria Baptista", "0414-1234567", "La Popita");
+    Client(49, "Cesar Mora", "0414-1234567", "El Junquito");
+    Client(50, "Camila Escalante", "0414-1234567", "Barrio Obrero");
+    Client(51, "Kenie Escalante", "0414-1234567", "La Normal");
+    Client(52, "Gabriel Aguilar", "0414-1234567", "Cordero");
+    Client(53, "Elizabeth Manzilla", "0414-1234567", "Aeropuesto");
+    Client(54, "Launnie Des Dianteaux", "0414-1234567", "Avaloir");
+    Client(55, "Elaine Fritz", "0414-1234567", "Londres");
+    Client(56, "Jacob Rose", "0414-1234567", "Londres");
+    Client(57, "Marcel Leroy", "0414-1234567", "Paris");
+    Client(58, "Cirico Matamorros", "0414-1234567", "Madrid");
+    Client(59, "Altagracia de la Torre", "0414-1234567", "Leon");
+    Client(60, "Zellie Dubois", "0414-1234567", "Provenza");
+
+
+    
 };
 
 /////////////////////////////////////////////////////////////////////////////////
-///                              the prsogram starts here                            /// 
+///                              the program starts here                            /// 
 //////////////////////////////////////////////////////////////////////////////////////
 
 
