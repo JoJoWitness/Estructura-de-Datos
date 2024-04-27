@@ -18,7 +18,10 @@ using namespace std;
 // 29907856 Jordano Pernia
 // 29929240 Oriana Moreno
 // 31180603 Ariani Valera
-//
+
+//Recomendaciones:
+//* Para facilitar la busqueda de datos al momento de entrar al sistema y hacer un resgitro o midificacion
+//  revisar la seccion del codigo desde las lineas 687 a la 720
 
 fstream work, prov, prod, client, receipt, purc, arc;
 class Worker{
@@ -120,7 +123,7 @@ void editWorker(){
             cout << "\nTrabajador no encontrado" << endl;
         }
 
-        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag2;
     };
 }
@@ -155,7 +158,7 @@ void deleteWorker(){
         }
 		else{
             cout << "\nTrabajador no encontrado" << endl;
-            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
     };
@@ -234,7 +237,7 @@ void editProvider(){
             cout << "Proveedor no encontrado" << endl;
         };
 
-        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         int providerFlag;//////////////////////
         cin >> providerFlag;
         if(providerFlag!=1){
@@ -274,7 +277,7 @@ void deleteProvider(){
         }
         else{
             cout << "Proveedor no encontrado" << endl;
-            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
     };
@@ -465,7 +468,7 @@ void editProduct(){
             cout << "\nProducto no encontrado" << endl;
         }
 
-        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag2;
     };
 }
@@ -500,7 +503,7 @@ void deleteProduct(){
         }
         else{
             cout << "\nProducto no encontrado" << endl;
-            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
     };
@@ -579,7 +582,7 @@ void editClient(){
             cout << "\nCliente no encontrado" << endl;
         }
 
-        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
         cin >> flag2;
     };
 }
@@ -612,7 +615,7 @@ void deleteClient(){
         }
         else{
             cout << "\nCliente no encontrado" << endl;
-            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+            cout << "\nSi desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
             cin >> flag2;
         }
         cout<<"\nCliente eliminado exitosamente"<<endl;///////
@@ -803,7 +806,7 @@ int main(){
         }
 
         cout << "----------------------------------------------------------------" << endl;
-        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+        cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
         cin >> flag1;
     }
 
@@ -811,7 +814,6 @@ int main(){
 
     if (rol == "admi"){
         system("cls");
-        system("clear");//////////////////////////////////////////////////////////////////
         cout << "----------------------------------------------------------------" << endl;
         cout << "--------------------- Bienvenido " << userName <<" -----------------------"<<endl;
         while (1){
@@ -830,7 +832,6 @@ int main(){
                 int productFlag = 1;
                 while (productFlag == 1){
                     system("cls");
-                    system("clear");//////////////////////////////////////////////////////////////////
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "\nQue desea realizar?" << endl;
                     cout << "  1. Agregar un nuevo producto" << endl;
@@ -844,7 +845,6 @@ int main(){
                     switch (productOption){
                     case 1:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         int anId, aProviderId, aPrice, aStock, aMinStock;
                         string aDescription;
                         cout<<"\nEscogio agregar un nuevo producto\n"<<endl;
@@ -888,7 +888,6 @@ int main(){
                     
                     case 2:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio editar un producto\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         editProduct();
@@ -897,7 +896,6 @@ int main(){
                     
                     case 3:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio eliminar un producto\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         deleteProduct();
@@ -912,12 +910,11 @@ int main(){
                 }
                     cout << "\n----------------------------------------------------------------" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
                     int productMenuEnd;
                     cin >> productMenuEnd;
                     if (productMenuEnd != 1){
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         productFlag = 0;
                         break;
                     }
@@ -929,7 +926,6 @@ int main(){
                 int providerFlag = 1;
                 while (providerFlag == 1){
                     system("cls");
-                    system("clear");//////////////////////////////////////////////////////////////////
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "\nQue desea realizar?" << endl;
                     cout << "  1. Agregar un nuevo proveedor" << endl;
@@ -945,7 +941,6 @@ int main(){
                         int anId;
                         string aName, aPhone;
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout<<"\nEscogio agregar nuevo proveedor.\n"<<endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         cout << "Ingrese el id del nuevo proveedor: " << endl;
@@ -961,7 +956,6 @@ int main(){
                     
                     case 2:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio editar el proveedor.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         editProvider();
@@ -970,7 +964,6 @@ int main(){
                     
                     case 3:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio eliminar producto.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         deleteProduct();
@@ -983,13 +976,12 @@ int main(){
                     }
                 }
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
                     int providerMenuEnd;
                     cin >> providerMenuEnd;
                     if (providerMenuEnd != 1){
                         providerFlag = 0;
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                     }
                 };
                 break;
@@ -999,7 +991,6 @@ int main(){
                 int clientFlag = 1;
                 while (clientFlag == 1){
                     system("cls");
-                    system("clear");//////////////////////////////////////////////////////////////////
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "\nQue desea realizar?" << endl;
                     cout << "  1. Agregar un cliente nuevo" << endl;
@@ -1014,7 +1005,6 @@ int main(){
                     case 1:{
                         int anId;
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout<<"\nEscogio agregar nuevo cliente.\n"<<endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         cout << "Ingrese el id del nuevo cliente: " << endl;
@@ -1025,7 +1015,6 @@ int main(){
                     
                     case 2:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio editar un cliente.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         editClient();
@@ -1034,7 +1023,6 @@ int main(){
                     
                     case 3:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio eliminar un cliente.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         deleteClient();
@@ -1048,13 +1036,12 @@ int main(){
                 }
                     cout << "----------------------------------------------------------------\n" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir." << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa." << endl;
                     int clientMenuEnd;
                     cin >> clientMenuEnd;
                     if (clientMenuEnd != 1){
                         clientFlag = 0;
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                     }
                 };
                 break;
@@ -1064,7 +1051,6 @@ int main(){
                 int workerFlag = 1;
                 while (workerFlag == 1){
                     system("cls");
-                    system("clear");//////////////////////////////////////////////////////////////////
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "\nQue desea realizar?" << endl;
                     cout << "  1. Agregar un nuevo trabajador" << endl;
@@ -1079,7 +1065,6 @@ int main(){
                         int anId;
                         string aName, aRol, aPassword;
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio agregar un nuevo trabajador.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         cout << "\nIngrese el id del trabajador: " << endl;
@@ -1098,7 +1083,6 @@ int main(){
                     
                     case 2:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio editar un trabajador.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         editWorker();
@@ -1107,7 +1091,6 @@ int main(){
                     
                     case 3:{
                         system("cls");
-                        system("clear");//////////////////////////////////////////////////////////////////
                         cout << "\nEscogio eliminar un trabajador.\n" << endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                         deleteWorker();
@@ -1122,13 +1105,12 @@ int main(){
                     }
                 }
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir." << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir." << endl;
                     int workerMenuEnd;
                     cin >> workerMenuEnd;
                     if (workerMenuEnd != 1){
                         workerFlag = 0;
                         system("cls");
-                        system("clear");//////
                     }
                 };
                 break;
@@ -1136,7 +1118,6 @@ int main(){
             
             case 5:{
                 system("cls");
-                system("clear");//////////////////////////////////////////////////////////////////
                 cout << "\n----------------------------------------------------------------" << endl;
                 cout << "\t\tGracias por usar el programa!" << endl;
                 cout << "----------------------------------------------------------------" << endl;
@@ -1154,7 +1135,6 @@ int main(){
         int warehouseFlag = 1;
         while (warehouseFlag == 1){
             system("cls");
-            system("clear");
             cout << "----------------------------------------------------------------" << endl;
             cout << "--------------------- Bienvenido " << userName <<" ------------------------"<<endl;
             cout << "----------------------------------------------------------------" << endl;
@@ -1171,7 +1151,6 @@ int main(){
                 int anId, aProviderId, aPrice, aStock, aMinStock;
                 string aDescription;
                 system("cls");
-                system("clear");////
                 cout<<"\nEscogio agregar un nuevo producto"<<endl;
                         cout << "----------------------------------------------------------------\n" << endl;
                 cout << "Ingrese el id del producto: " << endl;
@@ -1214,7 +1193,6 @@ int main(){
             
             case 2:{
                 system("cls");
-                system("clear");
                 cout << "\nEscogio editar un producto\n" << endl;
                 cout << "----------------------------------------------------------------\n" << endl;
                 editProduct();
@@ -1227,12 +1205,11 @@ int main(){
             }
             cout << "\n----------------------------------------------------------------" << endl;
             cout << "\nDesea realizar otras modificaciones?" << endl;
-            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir del programa" << endl;
+            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa." << endl;
             int productMenuEnd;
             cin >> productMenuEnd;
             if (productMenuEnd != 1){
                 system("cls");
-                system("clear");
                 warehouseFlag = 0;
                 break;
             };
@@ -1240,16 +1217,15 @@ int main(){
     }
     else if (rol == "cashier"){
         system("cls");
-        system("clear");///////
         cout << "----------------------------------------------------------------" << endl;
         cout << "--------------------- Bienvenido " << userName <<" ------------------------"<<endl;
-        cout << "----------------------------------------------------------------" << endl;
-        cout << "\nLa caja registradora esta abierta" << endl;
 
         int cashierFlag = 1;
         while (cashierFlag == 1){
             
             int cashierOption;
+	    cout << "----------------------------------------------------------------" << endl;
+            cout << "\nLa caja registradora esta abierta" << endl;
             cout << "\n1. Realizar una venta" << endl;
             cout << "2. Salir" << endl;
             cout << "\nSeleccione una de las opciones ingresando su numero" << endl;
@@ -1263,7 +1239,6 @@ int main(){
                 int anId = rand();
 
                 system("cls");
-                system("clear");///////
                 cout << "----------------------------------------------------------------" << endl;
                 cout << "Ingrese el id del cliente: " << endl;
                 cin >> clientId;
@@ -1295,7 +1270,7 @@ int main(){
                     bool productFound = false;
                     while (!productFound){
                         Product buffe;
-                        cout << "\nIngrese el id del producto: " << endl;
+                        cout << "\nIngrese el id del producto "<<i+1<<": " << endl;
                         cin >> productId;
                         prod.open("product.dat", ios::in | ios::out | ios::binary);
                         prod.seekg(0, ios::beg);
@@ -1317,11 +1292,12 @@ int main(){
                                         int purchaseId = rand()*10;
                                         Purchase(purchaseId, productId, anId, productQuantity);
 
-                                        cout << "----------------------------------------" << endl;
-                                        cout << productQuantity << " " << buffe.getProductDescription() << endl;
-                                        cout << "----------------------------------------" << endl;
-                                       
-
+                                        system("cls");
+                                        cout << "\n----------------------------------------------------------------" << endl;
+                                        cout << "---------------------- PRODUCTOS VENDIDOS ----------------------" << endl;
+                                        cout << "\n Cantidad"<<"\t\tDescripcion" <<"\t\t  Monto total\n"<< endl;
+                                        cout << " "<<productQuantity << " \t\t\t" << buffe.getProductDescription()<< "\t\t  "<<buffe.getProductPrice()*productQuantity <<" .Cop."<< endl;
+                                        cout << "\n----------------------------------------------------------------" << endl;
                                         break;
                                     }
                                     else{
