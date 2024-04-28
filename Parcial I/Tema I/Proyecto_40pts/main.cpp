@@ -21,7 +21,7 @@ using namespace std;
 
 //Recomendaciones:
 //* Para facilitar la busqueda de datos al momento de entrar al sistema y hacer un resgitro o midificacion
-//  revisar la seccion del codigo desde las lineas 687 a la 720
+// revisar la seccion del codigo desde las lineas 687 a la 720
 
 fstream work, prov, prod, client, receipt, purc, arc;
 class Worker{
@@ -391,6 +391,8 @@ class Product : public Provider{
 	    };
 	};
 
+
+
 void editProduct(){
     int idTemp, aProviderId, aPrice, aStock, aMinStock;
     string aDescription;
@@ -508,6 +510,27 @@ void deleteProduct(){
         }
     };
 };
+
+Product productArray[60];
+void loadProduct(){
+    int i = 0;
+    
+    Product buf;
+    ifstream f("product.dat", ios::binary);
+    ofstream temp("temp.dat", ios::binary);
+
+    while (1){
+        prod.read((char *)&buf, sizeof(buf));
+        if (prod.eof()){
+            break;
+        }
+        productArray[i] = buf;
+        ++i;
+    }
+
+    prod.close();
+}
+
 
 class Client{
 	private:
@@ -767,6 +790,8 @@ int main(){
     string rol, userName;
     bool user = false;
 
+    loadProduct();
+
 	cout << "---------------------------------------------------------------" << endl;
     cout <<"\n--------------BIENVENID@ AL SISTEMA DE LA TIENDA--------------" << endl;
     cout << "Por favor, antes de continuar, ingrese su nombre y su clave" << endl;
@@ -775,6 +800,13 @@ int main(){
     cout << "Las claves son:\n\t1. ryuk \n\t2. butterfly \n\t3. aliendot" << endl;
     cout << "---------------------------------------------------------------" << endl;
     int flag1 = 1;
+    cout << "ru ";
+
+    for (int i = 0; i < 60; ++i) {
+        cout <<  productArray[i].getProductDescription() << " ";
+    }
+ 
+   
 
     while (flag1 == 1){
         char name[50], password[12];

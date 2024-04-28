@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <iomanip>
+#include <cstring>
+#include <ctime>
 
 using namespace std;
 
@@ -386,6 +388,21 @@ class Product : public Provider{
 	        };
 	        prov.close();
 	    };
+
+        void getAllInfo(){
+            if(id < 10){
+                cout << "id: " << id << "    " <<"Producto: " << description << endl;   
+            }
+            else{
+                cout << "id: " << id << "   " <<"Producto: " << description << endl;  
+            }
+            
+        }
+
+        void getCompleteInfo(){
+            cout << "id: " << id << "   " << "Descripcion: " << description << "   " << "Precio: " << price << "   " << "Proveedor: " << id_provider << "   " << "Existencia: " << stock << "   " << "Minima existencia: " << stock_min << endl;
+        
+        }
 	};
 
 void editProduct(){
@@ -527,6 +544,10 @@ class Client{
 	        return id;
 	    };
 	
+        char* getClientName(){
+            return name;
+        }
+
 	    void setClientName(string aName){
 	        strcpy(name, aName.c_str());
 	    }
@@ -536,7 +557,18 @@ class Client{
         void setClientAddress(string anAddress){
             strcpy(address, anAddress.c_str());
         }
-	};
+        void getClientInfo(){ 
+            if(id < 10){
+            cout << "id: " << id << "         " << "Nombre: " << name << endl;
+            }
+            else if(id <10000000 && id >= 10){
+            cout << "id: " << id << "        " << "Nombre: " << name << endl;
+            }
+            else{
+            cout << "id: " << id << "  " << "Nombre: " << name << endl;   
+            };
+	    }
+};
 	
 void editClient(){
     int idTemp;
@@ -694,6 +726,7 @@ void loadWorkers(){
     Worker(29907856, "Jordano", "admi", "ryuk");
     Worker(29929240, "Oriana", "warehouse", "butterfly");
     Worker(31180603, "Ariani", "cashier", "aliendot");
+    Worker(31180603, "Ryuk", "organizer", "bestdog");
 };
 
 void loadProviders(){
@@ -781,11 +814,11 @@ void loadProducts(){
                     };
 };
 
+
 void loadClients(){
     // Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
     // Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
     // Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
-
     Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
     Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
     Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
@@ -851,6 +884,127 @@ void loadClients(){
     
 };
 
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+///                              Nuevas funciones                                  /// 
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+Product productArray[60];
+void loadProductToArray(){
+    int i = 0;
+    
+    Product buf;
+    ifstream prod("product.dat", ios::binary);
+
+    while (1){
+        prod.read((char *)&buf, sizeof(buf));
+        if (prod.eof()){
+            break;
+        }
+        productArray[i] = buf;
+        ++i;
+    }
+
+    prod.close();
+};
+
+Client clientArray[60];
+void loadClientToArray(){
+    int i = 0;
+    
+    Client buf;
+    ifstream client("client.dat", ios::binary);
+
+    while (1){
+        client.read((char *)&buf, sizeof(buf));
+        if (client.eof()){
+            break;
+        }
+        clientArray[i] = buf;
+        ++i;
+    }
+
+    client.close();
+
+}
+
+void merge(Product arr[], int left, int middle, int right) {
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+    Product L[n1];
+    Product R[n2];
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[middle + 1 + j];
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (strcmp(L[i].getProductDescription(), R[j].getProductDescription()) <= 0) {
+            arr[k]= L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(Product arr[], int left, int right) {
+    if (left < right) {
+        int middle = left + (right - left) / 2;
+        mergeSort(arr, left, middle);
+        mergeSort(arr, middle + 1, right);
+        merge(arr, left, middle, right);
+    }
+}
+
+
+int binarySearch(Product arr[],string product) { 
+    int n = 60;
+    int l = 0; 
+    int r = n - 1; 
+    char charProduct[50];
+    strcpy(charProduct, product.c_str());
+  
+    while (l <= r) { 
+  
+        int mid = l + (r - l) / 2; 
+  
+        int res = -10; 
+  
+        if (strcmp(charProduct, arr[mid].getProductDescription()) == 0){
+            return mid;
+        } 
+        else if (strcmp(charProduct, arr[mid].getProductDescription()) > 0){
+            l = mid + 1;
+        }
+        else{
+            r = mid - 1;
+        } 
+    }
+  
+    return -1; 
+} 
+
 /////////////////////////////////////////////////////////////////////////////////
 ///                              the program starts here                            /// 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -887,10 +1041,12 @@ int main(){
     cout <<"\n--------------BIENVENID@ AL SISTEMA DE LA TIENDA--------------" << endl;
     cout << "Por favor, antes de continuar, ingrese su nombre y su clave" << endl;
     cout << "\n---------------------------------------------------------------" << endl;
-    cout << endl << "Puede ingresar como: \n\t1. Jordano (administrador) \n\t2. Oriana (proveedor) \n\t3. Ariani (vendedor)" << endl;
-    cout << "Las claves son:\n\t1. ryuk \n\t2. butterfly \n\t3. aliendot" << endl;
+    cout << endl << "Puede ingresar como: \n\t1. Jordano (administrador) \n\t2. Oriana (proveedor) \n\t3. Ariani (vendedor) \n\t4. Ryuk (Organizador)" << endl;
+    cout << "Las claves son:\n\t1. ryuk \n\t2. butterfly \n\t3. aliendot \n\t4. bestdog" << endl;
     cout << "---------------------------------------------------------------" << endl;
     int flag1 = 1;
+
+   
 
     while (flag1 == 1){
         char name[50], password[12];
@@ -1483,6 +1639,102 @@ int main(){
                 }
             }
     }
+    else if (rol == "organizer"){
 
+            int organizerFlag=1;
+            system("cls");
+            system("clear");
+            cout << "----------------------------------------------------------------" << endl;
+            cout << "--------------------- Bienvenido " << userName <<" ------------------------"<<endl;
+            cout << "----------------------------------------------------------------" << endl;
+            cout << "\nQue desea realizar?" << endl;
+            cout << "\n  1. Ordenar el array de productos" << endl;
+            cout << "  2. Ordenar el array de clientes" << endl;
+            cout << "  3. Buscar un producto" << endl;
+            cout << "  3. Salir" << endl;
+            cout << "\nSeleccione una de las opciones ingresando su numero" << endl;
+            cin >> option;
+
+            loadProductToArray();
+            loadClientToArray();
+          
+            switch (option){
+            case 1:{
+                
+                system("cls");
+                system("clear");////
+                 int n = sizeof(productArray) / sizeof(productArray[0]);
+                cout<<"\nEscogio ordenar los productos"<<endl;
+                cout << "----------------------------------------------------------------\n" << endl;
+               cout<< "" << endl;
+                cout << "Arreglo desordenado: " << endl;
+                 for (int i = 0; i < n; i++){
+                    productArray[i].getAllInfo();
+                }
+
+                cout<< "" << endl;
+
+                clock_t startClock;
+                clock_t stopClock;
+
+               
+                // aqui esta lo del reloj. Si quiere le explico, esto debe ir declarado siempre sobre el cosito de mergeSort
+                startClock = clock();
+                mergeSort(productArray, 0, n - 1);
+                stopClock = clock();
+                double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
+                cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "Arreglo ordenado: " << endl;
+
+                for (int i = 0; i < n; i++){
+                    productArray[i].getAllInfo();
+                }
+               
+                break;
+            }
+            
+            case 2:{
+                system("cls");
+                system("clear");
+                cout << "\nEscogio ordenar los clientes\n" << endl;
+                cout << "----------------------------------------------------------------\n" << endl;
+                
+               
+             
+
+                break;
+            }
+            case 3:{
+               
+                system("cls");
+                system("clear");
+                cout << "\nEscogio buscar un producto\n" << endl;
+                cout << "----------------------------------------------------------------\n" << endl;
+                int n = sizeof(productArray) / sizeof(productArray[0]);
+                mergeSort(productArray, 0, n - 1);
+                cout << "Ingrese el nombre del producto que desea buscar: " << endl;
+                string searchFor;
+                cin.ignore();
+                getline(cin, searchFor);
+
+                int result = binarySearch(productArray, searchFor);
+                if (result == -1){
+                    cout << "Producto no encontrado" << endl;
+                }
+                else{
+                    cout << "El producto se encontraba en el indice: " << result << endl;
+                    productArray[result].getCompleteInfo();
+                }
+
+            }
+            
+            default:{
+                break;
+            }
+            };
+            
+            
+        };
+    
     return 0;
 }
