@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <cstring>
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -710,18 +711,6 @@ class Purchase{
 	    };
 	};
 
-//Originalmente se penso hacer un Id random para asignarle a las compras y la factura, pero dev c++ nos mostro problemas 
-//Por usar ek metodo to_string()
-
-// string createRandomId()
-// {
-//     string r = to_string(rand() % 11);
-//     char a = 97 + rand() % 26;
-//     char nd = 65 + rand() % 26;
-//     string anId = (r + a + nd);
-//     return anId;
-// }
-
 void loadWorkers(){
     Worker(29907856, "Jordano", "admi", "ryuk");
     Worker(29929240, "Oriana", "warehouse", "butterfly");
@@ -931,51 +920,34 @@ void loadClientToArray(){
 
 }
 
-void merge(Product arr[], int left, int middle, int right) {
-    int n1 = middle - left + 1;
-    int n2 = right - middle;
-    Product L[n1];
-    Product R[n2];
+void quicksort(Product arr[], int low, int high){ //Recibe un objeto de Products, ojo
+        int middle, i, j;
+        middle = (low+high)/2;
 
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
+        //pivote en valor central
+        string pivot = arr[middle].getProductDescription();
+        //separar segmentos
+        i = low;
+        j = high;
 
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[middle + 1 + j];
-
-    int i = 0, j = 0, k = left;
-    while (i < n1 && j < n2) {
-        if (strcmp(L[i].getProductDescription(), R[j].getProductDescription()) <= 0) {
-            arr[k]= L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
+        while(i<=j){
+            //separando en dos partes el array
+            while(arr[i].getProductDescription()<pivot) i++; //separo valores menores del pivote
+            while(arr[j].getProductDescription()>pivot) j--; //separo valores mayores del pivote
+            if(i<=j){ //intercambio de valores 
+                Product temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                i++;
+                j--;
+            }
         }
-        k++;
+        if(low<j)
+            quicksort(arr,low,j);
+        if(i<high)
+            quicksort(arr,i,high);   
     }
 
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-
-void mergeSort(Product arr[], int left, int right) {
-    if (left < right) {
-        int middle = left + (right - left) / 2;
-        mergeSort(arr, left, middle);
-        mergeSort(arr, middle + 1, right);
-        merge(arr, left, middle, right);
-    }
-}
 
 
 int binarySearch(Product arr[],string product) { 
@@ -1004,6 +976,8 @@ int binarySearch(Product arr[],string product) {
   
     return -1; 
 } 
+
+
 
 /////////////////////////////////////////////////////////////////////////////////
 ///                              the program starts here                            /// 
@@ -1647,6 +1621,9 @@ int main(){
             cout << "----------------------------------------------------------------" << endl;
             cout << "--------------------- Bienvenido " << userName <<" ------------------------"<<endl;
             cout << "----------------------------------------------------------------" << endl;
+            while(organizerFlag == 1){
+
+            
             cout << "\nQue desea realizar?" << endl;
             cout << "\n  1. Ordenar el array de productos" << endl;
             cout << "  2. Ordenar el array de clientes" << endl;
@@ -1663,10 +1640,10 @@ int main(){
                 
                 system("cls");
                 system("clear");////
-                 int n = sizeof(productArray) / sizeof(productArray[0]);
+                int n = sizeof(productArray) / sizeof(productArray[0]);
                 cout<<"\nEscogio ordenar los productos"<<endl;
                 cout << "----------------------------------------------------------------\n" << endl;
-               cout<< "" << endl;
+                cout<< "" << endl;
                 cout << "Arreglo desordenado: " << endl;
                  for (int i = 0; i < n; i++){
                     productArray[i].getAllInfo();
@@ -1680,7 +1657,7 @@ int main(){
                
                 // aqui esta lo del reloj. Si quiere le explico, esto debe ir declarado siempre sobre el cosito de mergeSort
                 startClock = clock();
-                mergeSort(productArray, 0, n - 1);
+                quicksort(productArray, 0, 59);
                 stopClock = clock();
                 double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
                 cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
@@ -1694,12 +1671,15 @@ int main(){
             }
             
             case 2:{
+
                 system("cls");
                 system("clear");
                 cout << "\nEscogio ordenar los clientes\n" << endl;
-                cout << "----------------------------------------------------------------\n" << endl;
-                
-               
+                cout << "----------------------------------------------------------------\n"<< endl;
+
+                cout << "RyukFinal";
+                Ordenamiento sorter;
+                sorter.mezclaNatural("client.dat");
              
 
                 break;
@@ -1711,7 +1691,7 @@ int main(){
                 cout << "\nEscogio buscar un producto\n" << endl;
                 cout << "----------------------------------------------------------------\n" << endl;
                 int n = sizeof(productArray) / sizeof(productArray[0]);
-                mergeSort(productArray, 0, n - 1);
+                quicksort(productArray, 0, n - 1);
                 cout << "Ingrese el nombre del producto que desea buscar: " << endl;
                 string searchFor;
                 cin.ignore();
@@ -1725,16 +1705,26 @@ int main(){
                     cout << "El producto se encontraba en el indice: " << result << endl;
                     productArray[result].getCompleteInfo();
                 }
-
+                break;
             }
             
             default:{
+                organizerFlag = 0;
                 break;
             }
             };
             
-            
+            cout << "\n----------------------------------------------------------------" << endl;
+            cout << "\nDesea seguir con el proceso?" << endl;
+            cout << "Si desea continuar con el proceso, presione 1. Si desea terminar el proceso, presione cualquier numero." << endl;
+            int closeWhile;
+            cin >> closeWhile;
+            if(closeWhile != 1){
+                organizerFlag = 0;
+            };
+
         };
+    }
     
     return 0;
 }
