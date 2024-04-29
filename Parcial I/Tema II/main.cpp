@@ -549,6 +549,17 @@ class Client{
             return name;
         }
 
+        char *getClientPhone(){
+            return phone;
+        }
+        char *getClientAddress(){
+            return address;
+        }
+
+        void setClientId(int anId){
+            id = anId;
+        }
+
 	    void setClientName(string aName){
 	        strcpy(name, aName.c_str());
 	    }
@@ -558,6 +569,8 @@ class Client{
         void setClientAddress(string anAddress){
             strcpy(address, anAddress.c_str());
         }
+
+        
         void getClientInfo(){ 
             if(id < 10){
             cout << "id: " << id << "         " << "Nombre: " << name << endl;
@@ -616,6 +629,7 @@ void editClient(){
         cin >> flag2;
     };
 }
+
 void deleteClient(){
     int idTemp;
     int flag2 = 1;
@@ -950,6 +964,132 @@ void quicksort(Product arr[], int low, int high){ //Recibe un objeto de Products
 
 
 
+int getFileSize() {
+        ifstream file("client.dat", ios::binary);
+        file.seekg(0, ios::end);
+        int size = file.tellg();
+        file.seekg(0, ios::beg);
+        file.close();
+        return size / sizeof(Client);
+    }
+
+void directMerge(int start, int middle, int end){
+
+    int n1 = middle - start + 1;
+    int n2 = end - middle;
+
+    Client buf;
+
+    ifstream f("client.dat", ios::binary);
+    
+    ofstream tempLower("tempLower.dat", ios::binary);
+
+    f.seekg(0, ios_base::beg);
+    int fer =0;
+
+    while(f.read((char *)&buf, sizeof(buf))){
+        if(f.tellg() == middle*sizeof(buf)){
+            break;
+        }
+        tempLower.write((char *)&buf, sizeof(buf));  
+    }
+    tempLower.close();
+    f.close();
+
+    Client buff;
+
+    ifstream fi("client.dat", ios::binary);
+    ofstream tempUpper("tempUpper.dat", ios::binary);
+    
+
+    fi.seekg(middle*sizeof(buff)-sizeof(buff), ios_base::beg );
+    
+
+    while(fi.read((char *)&buff, sizeof(buff))){
+        if(fi.eof()){
+            break;
+        }
+        tempUpper.write((char *)&buff, sizeof(buff));  
+    }
+   
+    fi.close();
+    tempUpper.close();
+
+    ifstream temp_file_lower("tempLower.dat", ios::binary);
+    ifstream temp_file_upper("tempUpper.dat", ios::binary);
+    ofstream clientSort("clientSorted.dat", ios::binary);
+
+    int i = 0, j = 0, k=start;
+
+    Client clientLower, clientUpper, clientClient;
+
+    while(i < n1 && j < n2){
+        temp_file_lower.seekg(i*sizeof(clientLower), ios_base::beg );
+        temp_file_upper.seekg(j*sizeof(clientUpper), ios_base::beg );
+        clientSort.seekp(k*sizeof(clientClient), ios_base::beg );
+
+        temp_file_lower.read((char *)&clientLower, sizeof(clientLower));
+        temp_file_lower.read((char *)&clientUpper, sizeof(clientUpper));
+      
+
+        if (strcmp(clientLower.getClientName(), clientUpper.getClientName()) <= 0) {
+                cout << "Cliente lower: ";
+                clientLower.getClientInfo();
+                clientClient.setClientAddress(clientLower.getClientAddress());
+                clientClient.setClientId(clientLower.getClientId());
+                clientClient.setClientName(clientLower.getClientName());
+                clientClient.setClientPhone(clientLower.getClientPhone());
+
+                clientSort.write((char *)&clientClient, sizeof(clientClient));
+             
+                i++;
+            } else {
+                clientClient.setClientAddress(clientUpper.getClientAddress());
+                clientClient.setClientId(clientUpper.getClientId());
+                clientClient.setClientName(clientUpper.getClientName());
+                clientClient.setClientPhone(clientUpper.getClientPhone());
+
+
+                clientSort.write((char *)&clientClient, sizeof(clientClient));
+               
+                j++;
+            }
+        k++;
+    }
+
+    while (i < n1) {
+        clientClient.setClientAddress(clientLower.getClientAddress());
+        clientClient.setClientId(clientLower.getClientId());
+        clientClient.setClientName(clientLower.getClientName());
+        clientClient.setClientPhone(clientLower.getClientPhone());
+
+        clientSort.write((char *)&clientClient, sizeof(clientClient));
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        clientClient.setClientAddress(clientUpper.getClientAddress());
+        clientClient.setClientId(clientUpper.getClientId());
+        clientClient.setClientName(clientUpper.getClientName());
+        clientClient.setClientPhone(clientUpper.getClientPhone());
+
+        clientSort.write((char *)&clientUpper, sizeof(clientClient));
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int start, int end) {
+    if (start < end) {
+        int middle = start + (end - start) / 2;
+        mergeSort(start, middle);
+        mergeSort(middle + 1, end);
+
+        directMerge(start, middle, end);
+    }
+}
+
 int binarySearch(Product arr[],string product) { 
     int n = 60;
     int l = 0; 
@@ -1020,7 +1160,7 @@ int main(){
     cout << "---------------------------------------------------------------" << endl;
     int flag1 = 1;
 
-   
+    cout << strcmp("Ariani", "Jordano");
 
     while (flag1 == 1){
         char name[50], password[12];
@@ -1677,12 +1817,25 @@ int main(){
                 cout << "\nEscogio ordenar los clientes\n" << endl;
                 cout << "----------------------------------------------------------------\n"<< endl;
 
-                cout << "RyukFinal";
-                Ordenamiento sorter;
-                sorter.mezclaNatural("client.dat");
-             
+                clock_t startClock;
+                clock_t stopClock;
+                startClock = clock();
+                int n = getFileSize();
+                mergeSort(0, n);
+                stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
+                cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "Arreglo ordenado: ";
 
+                ifstream clientSorted("clientSorted.dat", ios::binary);
+                clientSorted.seekg(0, ios_base::beg);
+                Client buf;
+                int i =0;
+                while(clientSorted.read((char *)&buf, sizeof(buf)))
+                    buf.getClientInfo();
                 break;
+                cout << "ru";
+             
+                clientSorted.close();
             }
             case 3:{
                
