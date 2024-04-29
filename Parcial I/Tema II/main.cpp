@@ -911,6 +911,7 @@ void loadProductToArray(){
         ++i;
     }
 
+    prod.clear();
     prod.close();
 };
 
@@ -978,16 +979,21 @@ void directMerge(int start, int middle, int end){
     int n1 = middle - start + 1;
     int n2 = end - middle;
 
+    fstream forCleaningLower;
+    forCleaningLower.open("tempLower.dat", ios::binary | ios::out);
+    forCleaningLower.close();
+    fstream forCleaningUpper;
+    forCleaningLower.open("tempUpper.dat", ios::binary | ios::out);
+    forCleaningLower.close();
+
     Client buf;
 
     ifstream f("client.dat", ios::binary);
-    
     ofstream tempLower("tempLower.dat", ios::binary);
 
     f.seekg(0, ios_base::beg);
-    int fer =0;
-
     while(f.read((char *)&buf, sizeof(buf))){
+        
         if(f.tellg() == middle*sizeof(buf)){
             break;
         }
@@ -1001,8 +1007,8 @@ void directMerge(int start, int middle, int end){
     ifstream fi("client.dat", ios::binary);
     ofstream tempUpper("tempUpper.dat", ios::binary);
     
-
-    fi.seekg(middle*sizeof(buff)-sizeof(buff), ios_base::beg );
+   
+    fi.seekg((middle*sizeof(buff)-static_cast<streamoff>(sizeof(buff))), ios_base::beg );
     
 
     while(fi.read((char *)&buff, sizeof(buff))){
@@ -1015,33 +1021,36 @@ void directMerge(int start, int middle, int end){
     fi.close();
     tempUpper.close();
 
-    ifstream temp_file_lower("tempLower.dat", ios::binary);
-    ifstream temp_file_upper("tempUpper.dat", ios::binary);
-    ofstream clientSort("clientSorted.dat", ios::binary);
+    fstream temp_file_lower;
+    temp_file_lower.open("tempLower.dat", ios::in | ios::binary);
+    fstream  temp_file_upper;
+    temp_file_upper.open("tempUpper.dat", ios::in | ios::binary);
+    fstream  clientSort;
+    clientSort.open("client.dat", ios::in | ios::out | ios::binary);
 
     int i = 0, j = 0, k=start;
 
     Client clientLower, clientUpper, clientClient;
 
-    while(i < n1 && j < n2){
-        temp_file_lower.seekg(i*sizeof(clientLower), ios_base::beg );
-        temp_file_upper.seekg(j*sizeof(clientUpper), ios_base::beg );
-        clientSort.seekp(k*sizeof(clientClient), ios_base::beg );
+    temp_file_lower.seekg((i*sizeof(clientLower)) , ios_base::beg );
+    temp_file_upper.seekg((j*sizeof(clientUpper)), ios_base::beg );
+    clientSort.seekp((k*sizeof(clientClient)), ios_base::beg );
 
+    while(i < n1 && j < n2){
+        
         temp_file_lower.read((char *)&clientLower, sizeof(clientLower));
         temp_file_lower.read((char *)&clientUpper, sizeof(clientUpper));
+        client.read((char *)&clientClient, sizeof(clientClient));
       
 
         if (strcmp(clientLower.getClientName(), clientUpper.getClientName()) <= 0) {
-                cout << "Cliente lower: ";
-                clientLower.getClientInfo();
                 clientClient.setClientAddress(clientLower.getClientAddress());
                 clientClient.setClientId(clientLower.getClientId());
                 clientClient.setClientName(clientLower.getClientName());
                 clientClient.setClientPhone(clientLower.getClientPhone());
 
+                clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
                 clientSort.write((char *)&clientClient, sizeof(clientClient));
-             
                 i++;
             } else {
                 clientClient.setClientAddress(clientUpper.getClientAddress());
@@ -1049,9 +1058,8 @@ void directMerge(int start, int middle, int end){
                 clientClient.setClientName(clientUpper.getClientName());
                 clientClient.setClientPhone(clientUpper.getClientPhone());
 
-
-                clientSort.write((char *)&clientClient, sizeof(clientClient));
-               
+                clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
+                clientSort.write((char *)&clientClient, sizeof(clientClient));               
                 j++;
             }
         k++;
@@ -1063,6 +1071,7 @@ void directMerge(int start, int middle, int end){
         clientClient.setClientName(clientLower.getClientName());
         clientClient.setClientPhone(clientLower.getClientPhone());
 
+        clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
         clientSort.write((char *)&clientClient, sizeof(clientClient));
         i++;
         k++;
@@ -1074,18 +1083,27 @@ void directMerge(int start, int middle, int end){
         clientClient.setClientName(clientUpper.getClientName());
         clientClient.setClientPhone(clientUpper.getClientPhone());
 
+        clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
         clientSort.write((char *)&clientUpper, sizeof(clientClient));
         j++;
         k++;
     }
+
+    temp_file_lower.close();
+    temp_file_upper.close();
+    clientSort.close();
+
+    remove("tempLower.dat");
+    remove("tempUpper.dat");
 }
 
 void mergeSort(int start, int end) {
+    int middle = start + (end - start) / 2;
+   
     if (start < end) {
-        int middle = start + (end - start) / 2;
+        
         mergeSort(start, middle);
         mergeSort(middle + 1, end);
-
         directMerge(start, middle, end);
     }
 }
@@ -1816,26 +1834,30 @@ int main(){
                 system("clear");
                 cout << "\nEscogio ordenar los clientes\n" << endl;
                 cout << "----------------------------------------------------------------\n"<< endl;
-
+            
                 clock_t startClock;
                 clock_t stopClock;
-                startClock = clock();
                 int n = getFileSize();
-                mergeSort(0, n);
+                startClock = clock();
+                
+               
+                mergeSort(0, n-1);
                 stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
                 cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
                 cout << "Arreglo ordenado: ";
 
-                ifstream clientSorted("clientSorted.dat", ios::binary);
+                ifstream clientSorted("client.dat", ios::binary);
                 clientSorted.seekg(0, ios_base::beg);
                 Client buf;
                 int i =0;
-                while(clientSorted.read((char *)&buf, sizeof(buf)))
+                while(clientSorted.read((char *)&buf, sizeof(buf))){
                     buf.getClientInfo();
-                break;
+                };
+
                 cout << "ru";
-             
                 clientSorted.close();
+                break;
+                
             }
             case 3:{
                
