@@ -822,12 +822,12 @@ void loadClients(){
     // Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
     // Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
     // Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
-    Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
-    Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
-    Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
+    Client(1, "Jordano Pernia", "0414-3711282", "San Cristobal");
+    Client(2, "Oriana Moreno", "0414-7347068", "Patiecitos");
+    Client(3, "Ariani Valera", "0426-2705797", "Tariba");
     Client(4, "Luz D'Santiago", "0414-1234567", "La Popita");
     Client(5, "Javier Pernia", "0414-1234567", "La Normal");
-    Client(6, "Carmen Niño", "0414-1234567", "La Normal");
+    Client(6, "Carmen de Pernia", "0414-1234567", "La Normal");
     Client(7, "Octaviano Pernia", "0414-1234567", "La Normal");
     Client(8, "Ryuk", "0414-1234567", "La normal");
     Client(9, "Orianna Villamizar", "0414-1234567", "La Concordia");
@@ -838,8 +838,8 @@ void loadClients(){
     Client(14, "Aisskel Duarte", "0414-1234567", "Rubio");
     Client(15, "Osmar Porras", "0414-1234567", "Santa Teresa");
     Client(16, "Gabriel Galan", "0414-1234567", "Los Naranjos");
-    Client(17, "Pelusa", "0414-1234567", "La Popita");
-    Client(18, "Campana", "0414-1234567", "La Popita");
+    Client(17, "Tyler Joseph", "0414-1234567", "La Fria");
+    Client(18, "Campana Pelusa", "0414-1234567", "La Popita");
     Client(19, "Pablo Vivas", "0414-1234567", "España");
     Client(20, "Alicia Apolinar", "0414-1234567", "La Normal");
     Client(21, "Andrea Barrios", "0414-1234567", "Pueblo Nuevo");
@@ -882,8 +882,6 @@ void loadClients(){
     Client(58, "Cirico Matamorros", "0414-1234567", "Madrid");
     Client(59, "Altagracia de la Torre", "0414-1234567", "Leon");
     Client(60, "Zellie Dubois", "0414-1234567", "Provenza");
-
-
     
 };
 
@@ -963,8 +961,6 @@ void quicksort(Product arr[], int low, int high){ //Recibe un objeto de Products
             quicksort(arr,i,high);   
     }
 
-
-
 int getFileSize() {
         ifstream file("client.dat", ios::binary);
         file.seekg(0, ios::end);
@@ -974,150 +970,304 @@ int getFileSize() {
         return size / sizeof(Client);
     }
 
-void directMerge(int start, int middle, int end){
-
-    int n1 = middle - start + 1;
-    int n2 = end - middle;
-
-    fstream forCleaningLower;
-    forCleaningLower.open("tempLower.dat", ios::binary | ios::out);
-    forCleaningLower.close();
-    fstream forCleaningUpper;
-    forCleaningLower.open("tempUpper.dat", ios::binary | ios::out);
-    forCleaningLower.close();
-
-    Client buf;
-
-    ifstream f("client.dat", ios::binary);
-    ofstream tempLower("tempLower.dat", ios::binary);
-
-    f.seekg(start*sizeof(buf), ios_base::beg);
-    while(f.read((char *)&buf, sizeof(buf))){
-        if(f.tellg() == n1*sizeof(buf)){
-            break;
-        }
-        tempLower.write((char *)&buf, sizeof(buf));  
-    }
-    tempLower.close();
-    f.close();
-
-    Client buff;
+void splitFile(int groupSize){
+    Client client;
+    int group1, group2;
+    int size = getFileSize() - 1;
 
     ifstream fi("client.dat", ios::binary);
-    ofstream tempUpper("tempUpper.dat", ios::binary);
-    
-    fi.seekg((middle+1)*sizeof(buff), ios_base::beg);
-    while(fi.read((char *)&buff, sizeof(buff))){
-        if(fi.tellg() == n2*sizeof(buff)){
-            break;
+    ofstream aux1("aux1.dat", ios::binary);
+    ofstream aux2("aux2.dat", ios::binary);
+
+    if(fi.fail() || aux1.fail() || aux2.fail()){
+        cout<<"Error al abrir el archivo"<<endl;
+        return;
+    }
+
+    int i = 0;
+    while (i < size){
+        group1 = 0;
+        group2 = 0;
+
+        while(group1 < groupSize && fi.read((char*)&client,sizeof(client))){
+            aux1.write((char*)&client, sizeof(client));
+            group1++;
+            i++;
         }
-        tempUpper.write((char *)&buff, sizeof(buff));  
-    }
-   
-    fi.close();
-    tempUpper.close();
 
-    fstream temp_file_lower;
-    temp_file_lower.open("tempLower.dat", ios::in | ios::binary);
-    fstream  temp_file_upper;
-    temp_file_upper.open("tempUpper.dat", ios::in | ios::binary);
-    fstream  clientSort;
-    clientSort.open("client.dat", ios::in | ios::out | ios::binary);
-
-    int i = 0, j = 0, k=start;
-
-    Client clientLower, clientUpper, clientClient;
-
-   
-      
-    while(i < n1 && j < n2){
-        
-        temp_file_lower.seekg((i*sizeof(clientLower)) , ios_base::beg );
-        temp_file_upper.seekg((j*sizeof(clientUpper)), ios_base::beg );
-        clientSort.seekg((k*sizeof(clientClient)), ios_base::beg );
-
-
-        clientSort.read((char *)&clientClient, sizeof(clientClient));   
-        temp_file_upper.read((char *)&clientUpper, sizeof(clientLower));
-        temp_file_lower.read((char *)&clientLower, sizeof(clientUpper));
-        
-
-        if (strcmp(clientLower.getClientName(), clientUpper.getClientName()) <= 0) {
-                clientClient.setClientAddress(clientLower.getClientAddress());
-                clientClient.setClientId(clientLower.getClientId());
-                clientClient.setClientName(clientLower.getClientName());
-                clientClient.setClientPhone(clientLower.getClientPhone());
-                
-                clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
-                clientSort.write((char *)&clientClient, sizeof(clientClient));
-                i++;
-            } else {
-                clientClient.setClientAddress(clientUpper.getClientAddress());
-                clientClient.setClientId(clientUpper.getClientId());
-                clientClient.setClientName(clientUpper.getClientName());
-                clientClient.setClientPhone(clientUpper.getClientPhone());
-
-                clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
-                clientSort.write((char *)&clientClient, sizeof(clientClient));               
-                j++;
-            }
-        k++;
+        while(group2 < groupSize && fi.read((char*)&client,sizeof(client))){
+            aux2.write((char*)&client, sizeof(client));
+            group2++;
+            i++;
+        }
     }
 
-    while (i < n1) {
+    
+    /*int i = 0, division = 1;
+    while(fi.read((char*)&client, sizeof(client))){
+        if(division == 1){
+            aux1.write((char*)&client, sizeof(client));
+        }else{
+            aux2.write((char*)&client, sizeof(client));
+        }
 
-        temp_file_lower.seekg((i*sizeof(clientLower)) , ios_base::beg );
-        clientSort.seekg((k*sizeof(clientClient)), ios_base::beg );
-        clientSort.read((char *)&clientClient, sizeof(clientClient));
-        temp_file_lower.read((char *)&clientLower, sizeof(clientLower));
-
-        clientClient.setClientAddress(clientLower.getClientAddress());
-        clientClient.setClientId(clientLower.getClientId());
-        clientClient.setClientName(clientLower.getClientName());
-        clientClient.setClientPhone(clientLower.getClientPhone());
-
-        clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
-        clientSort.write((char *)&clientClient, sizeof(clientClient));
         i++;
-        k++;
-    }
 
-    while (j < n2) {
+        if(i == groupSize){
+            division *= -1;
+            i = 0;
+        }
 
+    }*/
 
-        temp_file_upper.seekg((i*sizeof(clientUpper)) , ios_base::beg );
-        clientSort.seekg((k*sizeof(clientClient)), ios_base::beg );
-        clientSort.read((char *)&clientClient, sizeof(clientClient));
-        temp_file_upper.read((char *)&clientUpper, sizeof(clientUpper));
-
-        clientClient.setClientAddress(clientUpper.getClientAddress());
-        clientClient.setClientId(clientUpper.getClientId());
-        clientClient.setClientName(clientUpper.getClientName());
-        clientClient.setClientPhone(clientUpper.getClientPhone());
-
-        clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
-        clientSort.write((char *)&clientClient, sizeof(clientClient));
-        j++;
-        k++;
-    }
-
-    temp_file_lower.close();
-    temp_file_upper.close();
-    clientSort.close();
-
-    remove("tempLower.dat");
-    remove("tempUpper.dat");
+    fi.close();
+    aux1.close();
+    aux2.close();   
 }
 
-void mergeSort(int start, int end) {
-    int middle = start + (end - start) / 2;
-   
-    if (start < end) {
-        
-        mergeSort(start, middle);
-        mergeSort(middle + 1, end);
-        directMerge(start, middle, end);
+void fusionFileDirect(int groupSize){
+    Client client1, client2;
+    int numGroups;
+    int position1 = 0, position2 = 0, size1 = 0, size2 = 0;
+
+    ofstream fi("client.dat", ios::binary);
+    ifstream aux1("aux1.dat", ios::binary);
+    ifstream aux2("aux2.dat", ios::binary);
+
+    while(aux1.read((char*)&client1, sizeof(client1))){
+        size1++;
     }
+
+    while(aux2.read((char*)&client1, sizeof(client1))){
+        size2++;
+    }
+
+    aux1.close();
+    aux2.close();
+
+    if(size1 % groupSize == 0){
+        numGroups = size1 / groupSize;
+    } else {
+        numGroups = size2 /  groupSize;
+    }
+
+    aux1.open("aux1.dat", ios::binary);
+	aux2.open("aux2.dat", ios::binary);
+	
+	aux1.read((char *)&client1,sizeof(client1));
+	aux2.read((char *)&client2,sizeof(client2));
+
+    for(int i=0; i<numGroups; i++){
+        while(position1 < (groupSize + groupSize*i) || position2 < (groupSize + groupSize*i)){
+            while(position1 == (groupSize + groupSize*i) && position2 < (groupSize + groupSize*i)){
+                fi.write((char*)&client2, sizeof(client2));
+                if(!aux2.read((char*)&client2, sizeof(client2))){
+                    position2 = (groupSize + groupSize*i) - 1;
+                }
+                position2++;
+            }
+
+            while(position2 == (groupSize + groupSize*i) && position1 < (groupSize + groupSize*i)){
+                    fi.write((char *)&client1,sizeof(client1));
+                    if(!aux1.read((char*)&client1, sizeof(client1))){
+                    position1 = (groupSize + groupSize*i) - 1;
+                }
+                position1++;
+            }
+
+            if((position1 < (groupSize + groupSize*i) && position2 < (groupSize + groupSize*i)) && (strcmp(client1.getClientName(), client2.getClientName()) <= 0 )){
+                fi.write((char*)&client1, sizeof(client1));
+                if(!aux1.read((char*)&client1, sizeof(client1))){
+                    if(size1 < size2){
+                        position1 = (groupSize +  groupSize*i) -1;
+                    }
+                }
+                position1++;
+            } else if((position1<(groupSize +  groupSize*i) && position2<(groupSize + groupSize*i)) && (strcmp(client1.getClientName(), client2.getClientName())>0)){
+                fi.write((char*)&client2, sizeof(client2));
+                if(!aux2.read((char*)&client2, sizeof(client2))){
+                    if(size2 < size1){
+                        position2 = (groupSize +  groupSize*i) -1;
+                    }
+                }
+                position2++;
+        
+            }    
+        }   
+    }
+
+    if(size1 % groupSize!=0 && size1 > size2){
+        do{
+            fi.write((char*)&client1, sizeof(client1));
+        }while(aux1.read((char*)&client1,sizeof(client1)));
+    }
+
+    if(size2 % groupSize!=0 && size2 > size1){
+        do{
+            fi.write((char*)&client2, sizeof(client2));
+        }while(aux2.read((char*)&client2,sizeof(client2)));
+    }
+
+    fi.close();
+    aux1.close();
+    aux2.close();
+	
+}
+
+void directMergeSort(){
+    Client client;
+    int groupSize = 1;
+    while(groupSize < getFileSize() - 1){
+        splitFile(groupSize);
+        fusionFileDirect(groupSize);
+        groupSize = groupSize * 2;
+    }
+}
+
+void fusionFileNatural(vector<int>&size1, vector<int>&size2){
+    Client client1, client2;
+    int numGroups = 0;
+    int position1 = 0, position2 = 0;
+
+    ofstream fi("client.dat", ios::binary);
+    ifstream aux1("aux1.dat", ios::binary);
+    ifstream aux2("aux2.dat", ios::binary);
+
+    if(size1.size() > size2.size()){
+        numGroups = size2.size();
+    } else {
+        numGroups = size1.size();
+    }
+
+    aux1.read((char*)&client1, sizeof(client1));
+    aux2.read((char*)&client1, sizeof(client2));
+
+    for(int i = 0; i< getFileSize(); i++){
+        position1 = 0;
+        position2 = 0;
+
+        while(position1 < size1[i] || position2 < size2[i]){
+            while(position1 == size1[i] && position2 < size2[i]){
+                fi.write((char*)&client2, sizeof(client2));
+                if(!aux2.read((char*)&client2, sizeof(client2))){
+                    position2 = size2[i]-1;
+                }
+                position2++;
+            }
+
+            if((position1 < size1[i] && position2 < size2[i]) && (strcmp(client1.getClientName(), client2.getClientName()) <= 0)){
+                fi.write((char*)&client1, sizeof(client1));
+                if(!aux1.read((char*)&client1, sizeof(client1))){
+                    position1 = size1[i]-1;
+                }
+                position1++;
+            } else if ((position1 < size1[i] && position2 < size2[i]) && (strcmp(client1.getClientName(), client2.getClientName()) > 0)){
+                fi.write((char*)&client2, sizeof(client2));
+                if(!aux2.read((char*)&client2, sizeof(client2))){
+                    position2 = size2[i]-1;
+                }
+                position2++;
+            }
+        }
+    }
+
+    if(size1.size() > size2.size()){
+        do{
+            fi.write((char*)&client1, sizeof(client1));
+        }while(aux1.read((char*)&client1, sizeof(client1)));
+    }
+
+    if(size1.size() < size2.size()){
+        do{
+            fi.write((char*)&client2, sizeof(client2));
+        }while(aux2.read((char*)&client2, sizeof(client2)));
+    }
+
+    fi.close();
+    aux1.close();
+    aux2.close();
+}
+
+void naturalMergeSort(){
+    Client client1, client2;
+    int group1 = 0, group2 = 0, x = 0, n1 = 0, n2 = 0;
+    int size = getFileSize() - 1;
+    bool isWritten = false;
+    vector<int> size1;
+    vector<int> size2;
+    
+    do{
+        ifstream fi("client.dat", ios::binary);
+        ofstream aux1("aux1.dat", ios::binary);
+        ofstream aux2("aux2.dat", ios::binary);
+
+        if(fi.fail() || aux1.fail() || aux2.fail()){
+            cout<<"Error al abrir el archivo"<<endl;
+            return;
+        }
+        
+        int i = 0;
+        while(i < size){
+            if(i == 0){
+                fi.read((char*)&client1, sizeof(client1));
+                aux1.write((char*)&client1,sizeof(client1));
+                i++;
+                n1++;
+            } else {
+                aux1.write((char*)&client1,sizeof(client1));
+                i++;
+                n1++;
+            }
+
+            isWritten = false;
+            
+            while(fi.read((char*)&client2, sizeof(client2)) && strcmp(client1.getClientName(), client2.getClientName()) <= 0){
+                aux1.write((char*)&client2, sizeof(client2));
+                i++;
+                n1++;
+                client1 = client2;
+                isWritten = true;
+            }
+
+            group1++;
+            size1.push_back(n1);
+            n1 = 0;
+
+            if(i < size){
+                if(isWritten){
+                    aux2.write((char*)&client2, sizeof(client2));
+                    client1 = client2;
+                    i++;
+                    n2++;
+                } else {
+                    client1 = client2;
+                    aux2.write((char*)&client1, sizeof(client1));
+                }
+
+                while(fi.read((char*)&client2, sizeof(client2)) && strcmp(client1.getClientName(), client2.getClientName()) <= 0){
+                    aux2.write((char*)&client2, sizeof(client2));
+                    i++;
+                    n2++;
+                    client1 = client2;
+                }
+
+                client1 = client2;
+                size2.push_back(n2);
+                group2++;
+                n2 = 0;
+            }
+        }
+
+        fi.close();
+        aux1.close();
+        aux2.close();
+
+        fusionFileNatural(size1, size2);
+        x = size1[0];
+        size1.resize(0);
+        size2.resize(0);
+
+    }while(x < getFileSize()-1);
 }
 
 int binarySearch(Product arr[],string product) { 
@@ -1149,7 +1299,7 @@ int binarySearch(Product arr[],string product) {
 
 
 
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 ///                              the program starts here                            /// 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -1180,7 +1330,7 @@ int main(){
 
     string rol, userName;
     bool user = false;
-
+    
 	cout << "---------------------------------------------------------------" << endl;
     cout <<"\n--------------BIENVENID@ AL SISTEMA DE LA TIENDA--------------" << endl;
     cout << "Por favor, antes de continuar, ingrese su nombre y su clave" << endl;
@@ -1190,7 +1340,7 @@ int main(){
     cout << "---------------------------------------------------------------" << endl;
     int flag1 = 1;
 
-    cout << strcmp("Ariani", "Jordano");
+    //cout << strcmp("Ariani", "Jordano"); 
 
     while (flag1 == 1){
         char name[50], password[12];
@@ -1240,7 +1390,7 @@ int main(){
             cout << "  2. Cambiar la base de datos de los proveedores" << endl;
             cout << "  3. Cambiar la base de datos de los clientes" << endl;
             cout << "  4. Cambiar la base de datos de los trabajadores" << endl;
-            cout << "  5. salir" << endl;
+            cout << "  5. Salir" << endl;
             cout << "\nSeleccione una de las opciones ingresando su numero" << endl;
             cin >> option;
 
@@ -1331,7 +1481,7 @@ int main(){
                 }
                     cout << "\n----------------------------------------------------------------" << endl;
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
                     int productMenuEnd;
                     cin >> productMenuEnd;
                     if (productMenuEnd != 1){
@@ -1402,7 +1552,7 @@ int main(){
                     }
                 }
                     cout << "\nDesea realizar otras modificaciones?" << endl;
-                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir" << endl;
+                    cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir" << endl;
                     int providerMenuEnd;
                     cin >> providerMenuEnd;
                     if (providerMenuEnd != 1){
@@ -1646,7 +1796,7 @@ int main(){
             }
             cout << "\n----------------------------------------------------------------" << endl;
             cout << "\nDesea realizar otras modificaciones?" << endl;
-            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro n�mero para salir del programa" << endl;
+            cout << "Si desea continuar con el proceso, presione 1 \nDe lo contrario, presione cualquier otro numero para salir del programa" << endl;
             int productMenuEnd;
             cin >> productMenuEnd;
             if (productMenuEnd != 1){
@@ -1796,9 +1946,10 @@ int main(){
             
             cout << "\nQue desea realizar?" << endl;
             cout << "\n  1. Ordenar el array de productos" << endl;
-            cout << "  2. Ordenar el array de clientes" << endl;
-            cout << "  3. Buscar un producto" << endl;
-            cout << "  3. Salir" << endl;
+            cout << "  2. Ordenar el array de clientes - mezcla directa" << endl;
+            cout << "  3. Ordenar el array de clientes - mezcla natural" << endl;
+            cout << "  4. Buscar un producto" << endl;
+            cout << "  5. Salir" << endl;
             cout << "\nSeleccione una de las opciones ingresando su numero" << endl;
             cin >> option;
 
@@ -1824,8 +1975,6 @@ int main(){
                 clock_t startClock;
                 clock_t stopClock;
 
-               
-                // aqui esta lo del reloj. Si quiere le explico, esto debe ir declarado siempre sobre el cosito de mergeSort
                 startClock = clock();
                 quicksort(productArray, 0, 59);
                 stopClock = clock();
@@ -1844,19 +1993,20 @@ int main(){
 
                 system("cls");
                 system("clear");
-                cout << "\nEscogio ordenar los clientes\n" << endl;
+
+                cout << "\nEscogio ordenar los clientes por mezcla directa\n" << endl;
                 cout << "----------------------------------------------------------------\n"<< endl;
             
                 clock_t startClock;
                 clock_t stopClock;
                 int n = getFileSize();
                 startClock = clock();
+                   
                 
-               
-                mergeSort(0, n-1);
+                directMergeSort();
                 stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
                 cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
-                cout << "Arreglo ordenado: ";
+                cout << "Arreglo ordenado: "<<endl;
 
                 ifstream clientSorted("client.dat", ios::binary);
                 clientSorted.seekg(0, ios_base::beg);
@@ -1866,7 +2016,6 @@ int main(){
                     buf.getClientInfo();
                 };
 
-                cout << "ru";
                 clientSorted.close();
                 break;
                 
