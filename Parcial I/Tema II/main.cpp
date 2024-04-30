@@ -991,10 +991,9 @@ void directMerge(int start, int middle, int end){
     ifstream f("client.dat", ios::binary);
     ofstream tempLower("tempLower.dat", ios::binary);
 
-    f.seekg(0, ios_base::beg);
+    f.seekg(start*sizeof(buf), ios_base::beg);
     while(f.read((char *)&buf, sizeof(buf))){
-        
-        if(f.tellg() == middle*sizeof(buf)){
+        if(f.tellg() == n1*sizeof(buf)){
             break;
         }
         tempLower.write((char *)&buf, sizeof(buf));  
@@ -1007,12 +1006,9 @@ void directMerge(int start, int middle, int end){
     ifstream fi("client.dat", ios::binary);
     ofstream tempUpper("tempUpper.dat", ios::binary);
     
-   
-    fi.seekg((middle*sizeof(buff)-static_cast<streamoff>(sizeof(buff))), ios_base::beg );
-    
-
+    fi.seekg((middle+1)*sizeof(buff), ios_base::beg);
     while(fi.read((char *)&buff, sizeof(buff))){
-        if(fi.eof()){
+        if(fi.tellg() == n2*sizeof(buff)){
             break;
         }
         tempUpper.write((char *)&buff, sizeof(buff));  
@@ -1032,23 +1028,26 @@ void directMerge(int start, int middle, int end){
 
     Client clientLower, clientUpper, clientClient;
 
-    temp_file_lower.seekg((i*sizeof(clientLower)) , ios_base::beg );
-    temp_file_upper.seekg((j*sizeof(clientUpper)), ios_base::beg );
-    clientSort.seekp((k*sizeof(clientClient)), ios_base::beg );
-
+   
+      
     while(i < n1 && j < n2){
         
-        temp_file_lower.read((char *)&clientLower, sizeof(clientLower));
-        temp_file_lower.read((char *)&clientUpper, sizeof(clientUpper));
-        client.read((char *)&clientClient, sizeof(clientClient));
-      
+        temp_file_lower.seekg((i*sizeof(clientLower)) , ios_base::beg );
+        temp_file_upper.seekg((j*sizeof(clientUpper)), ios_base::beg );
+        clientSort.seekg((k*sizeof(clientClient)), ios_base::beg );
+
+
+        clientSort.read((char *)&clientClient, sizeof(clientClient));   
+        temp_file_upper.read((char *)&clientUpper, sizeof(clientLower));
+        temp_file_lower.read((char *)&clientLower, sizeof(clientUpper));
+        
 
         if (strcmp(clientLower.getClientName(), clientUpper.getClientName()) <= 0) {
                 clientClient.setClientAddress(clientLower.getClientAddress());
                 clientClient.setClientId(clientLower.getClientId());
                 clientClient.setClientName(clientLower.getClientName());
                 clientClient.setClientPhone(clientLower.getClientPhone());
-
+                
                 clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
                 clientSort.write((char *)&clientClient, sizeof(clientClient));
                 i++;
@@ -1066,6 +1065,12 @@ void directMerge(int start, int middle, int end){
     }
 
     while (i < n1) {
+
+        temp_file_lower.seekg((i*sizeof(clientLower)) , ios_base::beg );
+        clientSort.seekg((k*sizeof(clientClient)), ios_base::beg );
+        clientSort.read((char *)&clientClient, sizeof(clientClient));
+        temp_file_lower.read((char *)&clientLower, sizeof(clientLower));
+
         clientClient.setClientAddress(clientLower.getClientAddress());
         clientClient.setClientId(clientLower.getClientId());
         clientClient.setClientName(clientLower.getClientName());
@@ -1078,13 +1083,20 @@ void directMerge(int start, int middle, int end){
     }
 
     while (j < n2) {
+
+
+        temp_file_upper.seekg((i*sizeof(clientUpper)) , ios_base::beg );
+        clientSort.seekg((k*sizeof(clientClient)), ios_base::beg );
+        clientSort.read((char *)&clientClient, sizeof(clientClient));
+        temp_file_upper.read((char *)&clientUpper, sizeof(clientUpper));
+
         clientClient.setClientAddress(clientUpper.getClientAddress());
         clientClient.setClientId(clientUpper.getClientId());
         clientClient.setClientName(clientUpper.getClientName());
         clientClient.setClientPhone(clientUpper.getClientPhone());
 
         clientSort.seekp((clientSort.tellg()-static_cast<streamoff>(sizeof(clientClient))), ios_base::beg);
-        clientSort.write((char *)&clientUpper, sizeof(clientClient));
+        clientSort.write((char *)&clientClient, sizeof(clientClient));
         j++;
         k++;
     }
