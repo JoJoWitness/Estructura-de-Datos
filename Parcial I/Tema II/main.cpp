@@ -2020,7 +2020,39 @@ int main(){
                 break;
                 
             }
+		    
             case 3:{
+
+                system("cls");
+                system("clear");
+                cout<<"\nEscogio ordenar los clientes por mezcla natural\n" << endl;
+                cout << "----------------------------------------------------------------\n"<< endl;
+                clock_t startClock;
+                clock_t stopClock;
+                int n = getFileSize();
+                startClock = clock();
+                   
+                
+                naturalMergeSort();
+                stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
+                cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "Arreglo ordenado: "<<endl;
+
+                ifstream clientSorted("client.dat", ios::binary);
+                clientSorted.seekg(0, ios_base::beg);
+                Client buf;
+                int i =0;
+                while(clientSorted.read((char *)&buf, sizeof(buf))){
+                    buf.getClientInfo();
+                };
+
+                clientSorted.close();
+                break;
+
+            }
+
+		    
+            case 4:{
                
                 system("cls");
                 system("clear");
