@@ -1297,6 +1297,16 @@ int binarySearch(Product arr[],string product) {
     return -1; 
 } 
 
+void printClients(){
+    Client client;
+    ifstream fi;
+    fi.open("client.dat", ios::binary | ios::in);
+    while(fi.read((char*)&client, sizeof(client))){
+        cout<<"ID: "<<client.getClientId()<<" Nombre: "<<client.getClientName()<<endl;
+    }
+    
+    fi.close();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1939,7 +1949,7 @@ int main(){
             system("cls");
             system("clear");
             cout << "----------------------------------------------------------------" << endl;
-            cout << "--------------------- Bienvenido " << userName <<" ------------------------"<<endl;
+            cout << "--------------------- Bienvenido " << userName <<" -------------------------"<<endl;
             cout << "----------------------------------------------------------------" << endl;
             while(organizerFlag == 1){
 
@@ -1978,13 +1988,17 @@ int main(){
                 startClock = clock();
                 quicksort(productArray, 0, 59);
                 stopClock = clock();
-                double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
-                cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "----------------------------------------------------------------\n" << endl;
                 cout << "Arreglo ordenado: " << endl;
 
                 for (int i = 0; i < n; i++){
                     productArray[i].getAllInfo();
                 }
+
+                double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
+                cout << "----------------------------------------------------------------"<< endl;
+                cout<<"\tTiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "----------------------------------------------------------------\n"<< endl;
                
                 break;
             }
@@ -1994,20 +2008,21 @@ int main(){
                 system("cls");
                 system("clear");
 
-                cout << "\nEscogio ordenar los clientes por mezcla directa\n" << endl;
+                cout << "\nEscogio ordenar los clientes por mezcla directa" << endl;
                 cout << "----------------------------------------------------------------\n"<< endl;
-            
+                cout<<"" <<endl;
+                cout<<"Archivo de clientes desordenado: "<<endl;
+                printClients();//////////////
+                cout<<"\n\n"<<endl;
+                
                 clock_t startClock;
                 clock_t stopClock;
                 int n = getFileSize();
                 startClock = clock();
                    
-                
                 directMergeSort();
-                stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
-                cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "----------------------------------------------------------------\n"<< endl;
                 cout << "Arreglo ordenado: "<<endl;
-
                 ifstream clientSorted("client.dat", ios::binary);
                 clientSorted.seekg(0, ios_base::beg);
                 Client buf;
@@ -2016,17 +2031,30 @@ int main(){
                     buf.getClientInfo();
                 };
 
-                clientSorted.close();
+                clientSorted.close();//
+                
+                stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
+                cout << "----------------------------------------------------------------"<< endl;
+                cout<<"\tTiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "----------------------------------------------------------------\n"<< endl;
+
+                
+                cout<<"\nSi desea ver el funcionamiento del otro tipo de mezcla, por favor, cierre el sistema y vuelva a ejecutarlo." <<endl;
                 break;
                 
             }
-		    
+
             case 3:{
 
                 system("cls");
                 system("clear");
                 cout<<"\nEscogio ordenar los clientes por mezcla natural\n" << endl;
                 cout << "----------------------------------------------------------------\n"<< endl;
+
+                cout<<"Archivo de clientes desordenado: "<<endl;
+                printClients();//////////////
+                cout<<"\n\n"<<endl;
+
                 clock_t startClock;
                 clock_t stopClock;
                 int n = getFileSize();
@@ -2034,8 +2062,7 @@ int main(){
                    
                 
                 naturalMergeSort();
-                stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
-                cout<<"Tiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "----------------------------------------------------------------\n"<< endl;
                 cout << "Arreglo ordenado: "<<endl;
 
                 ifstream clientSorted("client.dat", ios::binary);
@@ -2047,11 +2074,16 @@ int main(){
                 };
 
                 clientSorted.close();
+                stopClock = clock();double duration = double(stopClock - startClock) / CLOCKS_PER_SEC * 1000;
+                cout << "----------------------------------------------------------------"<< endl;
+                cout<<"\tTiempo fue de: "<<duration<<" milisegundos"<<endl;
+                cout << "----------------------------------------------------------------\n"<< endl;
+
+                cout<<"\nSi desea ver el funcionamiento del otro tipo de mezcla, por favor, cierre el sistema y vuelva a ejecutarlo." << endl;
                 break;
 
             }
 
-		    
             case 4:{
                
                 system("cls");
@@ -2075,9 +2107,17 @@ int main(){
                 }
                 break;
             }
+            case 5:{
+                system("cls");
+                system("clear");//////////////////////////////////////////////////////////////////
+                cout << "\n----------------------------------------------------------------" << endl;
+                cout << "\t\tGracias por usar el programa!" << endl;
+                cout << "----------------------------------------------------------------" << endl;
+                return 0;
+            }
             
             default:{
-                organizerFlag = 0;
+                cout << "\nIngrese una opcion valida" << endl;
                 break;
             }
             };
@@ -2090,6 +2130,9 @@ int main(){
             if(closeWhile != 1){
                 organizerFlag = 0;
             };
+
+            system("cls");
+            system("clear");
 
         };
     }
