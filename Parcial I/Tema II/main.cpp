@@ -1124,10 +1124,9 @@ void directMergeSort(){
     }
 }
 
-void fusionFileNatural(vector<int>&size1, vector<int>&size2){
+void fusionFileNatural(vector<int>& size1, vector<int>& size2){
     Client client1, client2;
-    int numGroups = 0;
-    int position1 = 0, position2 = 0;
+    int numGroups = 0, position1 = 0, position2 = 0;
 
     ofstream fi("client.dat", ios::binary);
     ifstream aux1("aux1.dat", ios::binary);
@@ -1142,7 +1141,7 @@ void fusionFileNatural(vector<int>&size1, vector<int>&size2){
     aux1.read((char*)&client1, sizeof(client1));
     aux2.read((char*)&client1, sizeof(client2));
 
-    for(int i = 0; i< getFileSize(); i++){
+    for(int i = 0; i < numGroups; i++){
         position1 = 0;
         position2 = 0;
 
@@ -1154,13 +1153,22 @@ void fusionFileNatural(vector<int>&size1, vector<int>&size2){
                 }
                 position2++;
             }
+            while(position2 == size2[i] && position1 < size1[i]){
+                fi.write((char*)&client1, sizeof(client1));
+                if(!aux2.read((char*)&client1, sizeof(client1))){
+                    position1 = size1[i]-1;
+                }
+                position1++;
+            }
 
             if((position1 < size1[i] && position2 < size2[i]) && (strcmp(client1.getClientName(), client2.getClientName()) <= 0)){
                 fi.write((char*)&client1, sizeof(client1));
                 if(!aux1.read((char*)&client1, sizeof(client1))){
                     position1 = size1[i]-1;
                 }
+
                 position1++;
+
             } else if ((position1 < size1[i] && position2 < size2[i]) && (strcmp(client1.getClientName(), client2.getClientName()) > 0)){
                 fi.write((char*)&client2, sizeof(client2));
                 if(!aux2.read((char*)&client2, sizeof(client2))){
@@ -1177,7 +1185,7 @@ void fusionFileNatural(vector<int>&size1, vector<int>&size2){
         }while(aux1.read((char*)&client1, sizeof(client1)));
     }
 
-    if(size1.size() < size2.size()){
+    if(size2.size() > size1.size()){
         do{
             fi.write((char*)&client2, sizeof(client2));
         }while(aux2.read((char*)&client2, sizeof(client2)));
@@ -2045,7 +2053,7 @@ int main(){
             }
 
             case 3:{
-
+                
                 system("cls");
                 system("clear");
                 cout<<"\nEscogio ordenar los clientes por mezcla natural\n" << endl;
@@ -2059,12 +2067,11 @@ int main(){
                 clock_t stopClock;
                 int n = getFileSize();
                 startClock = clock();
-                   
                 
-                naturalMergeSort();
+                
                 cout << "----------------------------------------------------------------\n"<< endl;
                 cout << "Arreglo ordenado: "<<endl;
-
+                naturalMergeSort();
                 ifstream clientSorted("client.dat", ios::binary);
                 clientSorted.seekg(0, ios_base::beg);
                 Client buf;
