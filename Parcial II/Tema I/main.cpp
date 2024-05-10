@@ -89,7 +89,7 @@ class Queue{
 
       cout << "i";
       while(flag){
-        if(queue[i] == " "){
+        if(queue[i] == ""){
           flag = false;
           break;
         }
