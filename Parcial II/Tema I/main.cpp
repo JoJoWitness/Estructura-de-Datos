@@ -5,26 +5,29 @@
 
 using namespace std;
 
-
-
 class Queue{
   private:
     int front;
     int end;
-    int queue[25];
-    int clientCode;
+    string queue[25], clientCode;
 
   public:
     Queue(){
+      for(int i = 0; i < sizeof(queue)/sizeof(queue[0]); i++){
+        queue[i] = "";
+      }
       front = -1;
       end = -1;
     }
 
-    void enqueue(int clientCode){
+    void enqueue(string clientCode){
+      
       if(front == -1){
         front = 0;
       }
+    
       if(!isFull()){
+        
         if(end == sizeof(queue)/sizeof(queue[0]) - 1 && front != 0){
         
         end = 0;
@@ -32,7 +35,7 @@ class Queue{
         return;
         }
 
-        ++end;
+        end++;
         queue[end] = clientCode;
       }
       else{
@@ -40,11 +43,11 @@ class Queue{
       }
     };
 
-    int dequeue(){
+    string dequeue(){
       if(!isEmpty()){
 
         clientCode = queue[front];
-        queue[front] = 0;
+        queue[front] = "";
         if(front == end){
           front = -1;
           end = -1;
@@ -53,7 +56,7 @@ class Queue{
         return clientCode;
       }
       else{
-        return -1;
+        return "f";
       }
     };
 
@@ -70,7 +73,7 @@ class Queue{
       if (front == 0 && end == sizeof(queue)/sizeof(queue[0])){
         return true;
       }
-      else if(front - end == 1){
+      else if(front - abs(end) == 1){
         return true;
       }
       else{
@@ -78,22 +81,23 @@ class Queue{
       }
     };
 
-    bool compareCode(int clientCode){  
+    bool compareCode(string clientCode){  
       bool flag = true;
-      int i = front;
+      int i = (front > -1) ? front : 0;
 
       while(flag){
-        if(queue[i] == 0){
+        if(front == end){
           flag = false;
         }
         if(clientCode == queue[i]){
           return true;
         }
-        if(i == sizeof(queue)/sizeof(queue[0])){
+        if(i == sizeof(queue)/sizeof(queue[0]) - 1){
           i = 0;
         }
-
+          i++;
       }
+
       return false;
     }
 
@@ -101,47 +105,192 @@ class Queue{
       bool flag = true;
       int i = front;
       
-      if(!isEmpty){
-        cout << "Codigos en cola: " << endl;
+      if(!isEmpty()){
+        cout << "       Codigos en cola: " << endl;
+        cout << "        ___   "<< endl;
         while(flag){
-          if(queue[i] == 0){
+          if(i == end){
             flag = false;
           }
-          if(i == sizeof(queue)/sizeof(queue[0])){
+          if(i == sizeof(queue)/sizeof(queue[0])-1){
             i = 0;
           }
-          cout << queue[i] << endl;
+        
+          cout << "       |" << queue[i] << "|   "<< endl;
+          i++;
         }
-      }
-      else{
-        cout << "La cola esta vacia." << endl;
-      }
+        cout << "       |" << "___"<< "|   "<< endl;
+        
+        }
+        else{
+          cout << "La cola esta vacia." << endl;
+        }
 
     }
 
-    bool generateCode(int clientId){
-      string strId = to_string(clientId);
-      int size = strId.length();
+    bool generateCode(string clientId){
+      int size = clientId.length();
       string strCutId;
-      int cutId, decreasedId;
 
       if(size >= 3){
-        strCutId = strId[size-3] + strId[size-2] + strId[size-1];
-        cutId = stoi(strCutId);
-        
-        if(compareCode(cutId)){
-          strId.erase(strId.begin() + size -1);
-          decreasedId = stoi(strId);
-          generateCode(decreasedId);
+        strCutId = clientId.substr(size-3, 3);
+        if(compareCode(strCutId)){
+          clientId.erase(clientId.begin() + size -1);
+          generateCode(clientId);
         }
         else{
+          enqueue(strCutId);
           return true;
         }
       }
       else{
         return false;
-      }
+      };
+      return false;
     }
 
 };
 
+class Stack{
+  private:
+    int top;
+    char stack[25];
+
+  public:
+    Stack(){
+       for(int i = 0; i < sizeof(stack)/sizeof(stack[0]); i++){
+        stack[i] = ' ';
+      }
+      top = -1;
+  };
+
+  void push(int clientCode){
+    if(!isFull()){
+      top++;
+      stack[top] = clientCode;
+    }
+    else{
+      cout << "La pila esta llena" << endl;
+    }
+  };
+
+  char pop(){
+    char clientCode;
+
+    if(!isEmpty()){
+      clientCode = stack[top];
+    
+      top--;
+      return clientCode;
+    }
+    else{
+      return 'f';
+    }
+  };
+
+  bool isFull(){
+    if(top == sizeof(stack)/sizeof(stack[0]) - 1){
+      return true;
+    }
+    else{
+      return false;
+    }
+  };
+  
+  bool isEmpty(){
+    if(top == -1){
+      return true;
+    }
+    else{
+      return false;
+    }
+  };
+
+  void invertCode(string clientId){
+    
+    for(int i = 0; i < clientId.length() ; i++){
+      push(clientId[i]);
+    }
+  };
+
+  string getinvertCode(){
+    string strInvertedCode =""; 
+    int n = top;
+    for(int i = 0; i < n+1 ; i++){
+      if(!isEmpty()){
+     
+        strInvertedCode += pop();
+     
+      }
+    }
+    cout << "Codigo volteado: " << strInvertedCode;
+    
+    return strInvertedCode;
+};
+};
+
+int main(){
+
+  Queue clientQueue;
+
+  string taquilla1= "###", taquilla2 = "###", taquilla3= "###";
+  char menuOption;
+  bool flag1 = true, flag2 = true;
+  string currentClientId;
+
+  cout << "-------------------------------------------------------------------" << endl;
+  cout << "--------------BIENVENID@ AL SISTEMA DEL BANCO TESORO---------------" << endl;
+  cout << "-------------------------------------------------------------------" << endl;
+  cout << endl;
+   cout << endl;
+  cout << "A continuacion se dara una pequeña aclaratoria del funcionamiento de este sistema"<< endl;
+  cout << "Antes de realizar cualquier accion dentro del sistema, se mostrara el estado de las taquillas y de la cola de usuario"<< endl;
+  cout << "El valor ### es un placeholder para no romper la estetica de la impresion" << endl;
+  cout << endl;
+  cout << endl;
+  
+  while(flag1){
+    cout << "______________________________________________________" << endl;
+    cout << "|  Taquilla 1  |   |  Taquilla 2  |   |  Taquilla 3  |" << endl;
+    cout << "|              |   |              |   |              |" << endl;
+    cout << "|      " << taquilla1 << "     |   " << "|      " << taquilla2 << "     |   " << "|      " << taquilla3 << "     |   "<< endl;
+    cout << "|______________|___|______________|___|______________|" << endl;
+    cout << endl;
+    clientQueue.displayQueue();
+    cout << endl;
+    flag2 = true;
+
+    while(flag2){
+      cout << "Que desea realizar? presione la tecla que desee" << endl;
+      cout << "A. Ingresar un nuevo cliente a la cola" << endl;
+      cout << "1. Llamar al siguiente de la cola virtual en taquilla 1." << endl;
+      cout << "2. Llamar al siguiente de la cola virtual en taquilla 2." << endl;
+      cout << "3. Llamar al siguiente de la cola virtual en taquilla 3." << endl;
+      cout << "F. Finalizar el programa" << endl;
+      cout << endl;
+
+      cin >> menuOption;
+      
+      switch (menuOption)
+      {
+      case 'A':
+        cout << "Ingrese el ID del cliente, minimo 3 digitos" << endl;
+        cin >> currentClientId;
+        if(!clientQueue.generateCode(currentClientId)){
+          
+          Stack invertedCodeStack;
+          invertedCodeStack.invertCode(currentClientId);
+          clientQueue.generateCode(invertedCodeStack.getinvertCode());
+        };
+        flag2 = false;
+        break;
+      
+      default:
+        break;
+      }
+    }
+
+  }
+
+  return 0;
+}
