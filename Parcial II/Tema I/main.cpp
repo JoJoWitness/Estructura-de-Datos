@@ -84,12 +84,20 @@ class Queue{
     bool compareCode(string clientCode){  
       bool flag = true;
       int i = (front > -1) ? front : 0;
+      int tempClientCode = stoi(clientCode);
+      int tempQueueCode;
 
+      cout << "i";
       while(flag){
-        if(front == end){
+        if(queue[i] == " "){
+          flag = false;
+          break;
+        }
+        tempQueueCode = stoi(queue[i]);
+        if(i == end){
           flag = false;
         }
-        if(clientCode == queue[i]){
+        if(tempClientCode == tempQueueCode){
           return true;
         }
         if(i == sizeof(queue)/sizeof(queue[0]) - 1){
@@ -131,9 +139,11 @@ class Queue{
     bool generateCode(string clientId){
       int size = clientId.length();
       string strCutId;
+      
 
       if(size >= 3){
         strCutId = clientId.substr(size-3, 3);
+        cout << strCutId << "id cortado";
         if(compareCode(strCutId)){
           clientId.erase(clientId.begin() + size -1);
           generateCode(clientId);
@@ -242,7 +252,7 @@ int main(){
   cout << "--------------BIENVENID@ AL SISTEMA DEL BANCO TESORO---------------" << endl;
   cout << "-------------------------------------------------------------------" << endl;
   cout << endl;
-   cout << endl;
+  cout << endl;
   cout << "A continuacion se dara una pequeña aclaratoria del funcionamiento de este sistema"<< endl;
   cout << "Antes de realizar cualquier accion dentro del sistema, se mostrara el estado de las taquillas y de la cola de usuario"<< endl;
   cout << "El valor ### es un placeholder para no romper la estetica de la impresion" << endl;
