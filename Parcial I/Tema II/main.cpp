@@ -819,6 +819,9 @@ void loadProducts(){
 
 
 void loadClients(){
+    // Client(29907856, "Jordano Pernia", "0414-3711282", "San Cristobal");
+    // Client(29929240, "Oriana Moreno", "0414-7347068", "Patiecitos");
+    // Client(31180603, "Ariani Valera", "0426-2705797", "Tariba");
     Client(1, "Jordano Pernia", "0414-3711282", "San Cristobal");
     Client(2, "Oriana Moreno", "0414-7347068", "Patiecitos");
     Client(3, "Ariani Valera", "0426-2705797", "Tariba");
@@ -999,6 +1002,24 @@ void splitFile(int groupSize){
         }
     }
 
+    
+    /*int i = 0, division = 1;
+    while(fi.read((char*)&client, sizeof(client))){
+        if(division == 1){
+            aux1.write((char*)&client, sizeof(client));
+        }else{
+            aux2.write((char*)&client, sizeof(client));
+        }
+
+        i++;
+
+        if(i == groupSize){
+            division *= -1;
+            i = 0;
+        }
+
+    }*/
+
     fi.close();
     aux1.close();
     aux2.close();   
@@ -1105,53 +1126,69 @@ void directMergeSort(){
 
 void fusionFileNatural(vector<int>& size1, vector<int>& size2){
     Client client1, client2;
-    int numGroups = min(size1.size(), size2.size());
-    int position1 = 0, position2 = 0;
+    int numGroups = 0, position1 = 0, position2 = 0;
 
     ofstream fi("client.dat", ios::binary);
     ifstream aux1("aux1.dat", ios::binary);
     ifstream aux2("aux2.dat", ios::binary);
 
-    if (!fi || !aux1 || !aux2) {
-        cout << "Error al abrir uno de los archivos." << endl;
-        return;
+    if(size1.size() > size2.size()){
+        numGroups = size2.size();
+    } else {
+        numGroups = size1.size();
     }
+
+    aux1.read((char*)&client1, sizeof(client1));
+    aux2.read((char*)&client1, sizeof(client2));
 
     for(int i = 0; i < numGroups; i++){
         position1 = 0;
         position2 = 0;
 
         while(position1 < size1[i] || position2 < size2[i]){
-            if(position1 == size1[i] && position2 < size2[i]){
-                aux2.read((char*)&client2, sizeof(client2));
+            while(position1 == size1[i] && position2 < size2[i]){
                 fi.write((char*)&client2, sizeof(client2));
+                if(!aux2.read((char*)&client2, sizeof(client2))){
+                    position2 = size2[i]-1;
+                }
                 position2++;
             }
-            if(position2 == size2[i] && position1 < size1[i]){
-                aux1.read((char*)&client1, sizeof(client1));
+            while(position2 == size2[i] && position1 < size1[i]){
                 fi.write((char*)&client1, sizeof(client1));
+                if(!aux2.read((char*)&client1, sizeof(client1))){
+                    position1 = size1[i]-1;
+                }
                 position1++;
             }
 
-            if(position1 < size1[i] && position2 < size2[i]){
-                aux1.read((char*)&client1, sizeof(client1));
-                aux2.read((char*)&client2, sizeof(client2));
-                if (strcmp(client1.getClientName(), client2.getClientName()) <= 0){
-                    fi.write((char*)&client1, sizeof(client1));
-                    position1++;
-                } else {
-                    fi.write((char*)&client2, sizeof(client2));
-                    position2++;
+            if((position1 < size1[i] && position2 < size2[i]) && (strcmp(client1.getClientName(), client2.getClientName()) <= 0)){
+                fi.write((char*)&client1, sizeof(client1));
+                if(!aux1.read((char*)&client1, sizeof(client1))){
+                    position1 = size1[i]-1;
                 }
+
+                position1++;
+
+            } else if ((position1 < size1[i] && position2 < size2[i]) && (strcmp(client1.getClientName(), client2.getClientName()) > 0)){
+                fi.write((char*)&client2, sizeof(client2));
+                if(!aux2.read((char*)&client2, sizeof(client2))){
+                    position2 = size2[i]-1;
+                }
+                position2++;
             }
         }
     }
 
-    while (aux1.read((char*)&client1, sizeof(client1))) {
-        fi.write((char*)&client1, sizeof(client1));
+    if(size1.size() > size2.size()){
+        do{
+            fi.write((char*)&client1, sizeof(client1));
+        }while(aux1.read((char*)&client1, sizeof(client1)));
     }
-    while (aux2.read((char*)&client2, sizeof(client2))) {
-        fi.write((char*)&client2, sizeof(client2));
+
+    if(size2.size() > size1.size()){
+        do{
+            fi.write((char*)&client2, sizeof(client2));
+        }while(aux2.read((char*)&client2, sizeof(client2)));
     }
 
     fi.close();
@@ -1238,7 +1275,7 @@ void naturalMergeSort(){
         size1.resize(0);
         size2.resize(0);
 
-    }while(!size1.empty());
+    }while(x < getFileSize()-1);
 }
 
 int binarySearch(Product arr[],string product) { 
@@ -1320,6 +1357,8 @@ int main(){
     cout << "Las claves son:\n\t1. ryuk \n\t2. butterfly \n\t3. aliendot \n\t4. bestdog" << endl;
     cout << "---------------------------------------------------------------" << endl;
     int flag1 = 1;
+
+    //cout << strcmp("Ariani", "Jordano"); 
 
     while (flag1 == 1){
         char name[50], password[12];
@@ -2029,11 +2068,11 @@ int main(){
                 int n = getFileSize();
                 startClock = clock();
                 
-                naturalMergeSort();
+                
                 cout << "----------------------------------------------------------------\n"<< endl;
                 cout << "Arreglo ordenado: "<<endl;
-      
-                fstream clientSorted("client.dat", ios::binary);
+                naturalMergeSort();
+                ifstream clientSorted("client.dat", ios::binary);
                 clientSorted.seekg(0, ios_base::beg);
                 Client buf;
                 int i =0;
