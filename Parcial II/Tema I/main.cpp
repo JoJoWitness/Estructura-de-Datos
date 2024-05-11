@@ -57,7 +57,7 @@ class Queue{
         return clientCode;
       }
       else{
-        return "f";
+        return "###";
       }
     };
 
@@ -237,14 +237,14 @@ int main(){
   char menuOption;
   bool flag1 = true, flag2 = true;
   string currentClientId;
-  int tempEnd;
+  int tempEnd; 
 
   cout << "-------------------------------------------------------------------" << endl;
   cout << "--------------BIENVENID@ AL SISTEMA DEL BANCO TESORO---------------" << endl;
   cout << "-------------------------------------------------------------------" << endl;
   cout << endl;
   cout << endl;
-  cout << "A continuacion se dara una pequeña aclaratoria del funcionamiento de este sistema"<< endl;
+  cout << "A continuacion se dara una breve aclaratoria del funcionamiento de este sistema"<< endl;
   cout << "Antes de realizar cualquier accion dentro del sistema, se mostrara el estado de las taquillas y de la cola de usuario"<< endl;
   cout << "El valor ### es un placeholder para no romper la estetica de la impresion" << endl;
   cout << endl;
@@ -271,7 +271,11 @@ int main(){
       cout << endl;
 
       cin >> menuOption;
-      
+
+      if(isdigit(menuOption)){
+        menuOption = menuOption;
+      } else {menuOption = toupper(menuOption);}
+
       switch (menuOption)
       {
       case 'A':
@@ -287,25 +291,14 @@ int main(){
           
         flag2 = false;
         break;
-      case 'a':
-        cout << "Ingrese el ID del cliente, minimo 3 digitos" << endl;
-        cin >> currentClientId;
-        tempEnd = clientQueue.getEnd();
-        clientQueue.generateCode(currentClientId);
-        if(tempEnd == clientQueue.getEnd()){
-          Stack invertedCodeStack;
-          invertedCodeStack.invertCode(currentClientId);
-          clientQueue.generateCode(invertedCodeStack.getinvertCode());
-        }
-          
-        flag2 = false;
-        break;
+      
       case '1':
         taquilla1 = clientQueue.dequeue();
         flag2 = false;
         break;
       case '2':
         taquilla2 = clientQueue.dequeue();
+        
         flag2 = false;
         break;
       case '3':
@@ -313,19 +306,18 @@ int main(){
         flag2 = false;
         break;
       case 'F':
+        cout << "------------------------------------------------------------------"<<endl;
+        cout << "-------------------Gracias por usar el programa-------------------" << endl;
+        cout << "------------------------------------------------------------------"<<endl;
         flag1 = false;
         flag2 = false;
         break;
-      case 'f':
-        flag1 = false;
-        flag2 = false;
-        break;
+      
       default:
-        cout << "Opcion no valida, intente de nuevo" << endl;
+        cout << "Opcion no valida, intente de nuevo\n" << endl;
         break;
       }
     }
-
   }
 
   return 0;
