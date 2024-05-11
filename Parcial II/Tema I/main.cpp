@@ -141,7 +141,6 @@ class Queue{
         if(compareCode(strCutId)){
           clientId.erase(clientId.begin() + size -1);
           generateCode(clientId);
-          return;
         }
         else{
           enqueue(strCutId);
@@ -151,7 +150,6 @@ class Queue{
       else{
         return;
       };
-  return;
     }
     
     int getEnd(){
