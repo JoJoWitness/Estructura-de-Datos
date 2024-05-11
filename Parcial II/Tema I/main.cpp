@@ -3,6 +3,12 @@
 #include <string>
 #include <string.h>
 
+// Parcial II Practica 1 Integrantes:
+// 29907856 Jordano Pernia
+// 29929240 Oriana Moreno
+// 31180603 Ariani Valera
+//
+
 using namespace std;
 
 class Queue{
