@@ -2,6 +2,8 @@
 #include <time.h>
 #include <string>
 #include <string.h>
+#include <cmath>
+#include <cstdlib>
 
 // Parcial II Practica 1 Integrantes:
 // 29907856 Jordano Pernia
@@ -96,7 +98,7 @@ class Queue{
     bool compareCode(string clientCode){  
       bool flag = true;
       int i = (front > -1) ? front : 0;
-      int tempClientCode = stoi(clientCode);
+      int tempClientCode = atoi(clientCode.c_str());
       int tempQueueCode;
 
       while(flag){
@@ -104,7 +106,7 @@ class Queue{
           flag = false;
           break;
         }
-        tempQueueCode = stoi(queue[i]);
+        tempQueueCode = atoi(queue[i].c_str());
         if(i == end){
           flag = false;
         }
