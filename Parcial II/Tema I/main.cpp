@@ -48,11 +48,12 @@ class Queue{
 
         clientCode = queue[front];
         queue[front] = "";
-        if(front == end){
+         front++;
+        if(front > end){
           front = -1;
           end = -1;
         };
-        front++;
+       
         return clientCode;
       }
       else{
@@ -87,7 +88,6 @@ class Queue{
       int tempClientCode = stoi(clientCode);
       int tempQueueCode;
 
-      cout << "i";
       while(flag){
         if(queue[i] == ""){
           flag = false;
@@ -112,10 +112,9 @@ class Queue{
     void displayQueue(){
       bool flag = true;
       int i = front;
-      
       if(!isEmpty()){
-        cout << "       Codigos en cola: " << endl;
-        cout << "        ___   "<< endl;
+        cout << "Codigos en cola: " << endl;
+        cout << "                           ___   "<< endl;
         while(flag){
           if(i == end){
             flag = false;
@@ -123,12 +122,10 @@ class Queue{
           if(i == sizeof(queue)/sizeof(queue[0])-1){
             i = 0;
           }
-        
-          cout << "       |" << queue[i] << "|   "<< endl;
+          cout << "                          |" << queue[i] << "|   "<< endl;
           i++;
         }
-        cout << "       |" << "___"<< "|   "<< endl;
-        
+        cout << "                          |___|   "<< endl;
         }
         else{
           cout << "La cola esta vacia." << endl;
@@ -136,31 +133,32 @@ class Queue{
 
     }
 
-    bool generateCode(string clientId){
+    void generateCode(string clientId){
       int size = clientId.length();
       string strCutId;
-      
-
       if(size >= 3){
         strCutId = clientId.substr(size-3, 3);
-        cout << strCutId << "id cortado";
         if(compareCode(strCutId)){
           clientId.erase(clientId.begin() + size -1);
           generateCode(clientId);
+          return;
         }
         else{
           enqueue(strCutId);
-          return true;
+          return;
         }
       }
       else{
-        return false;
+        return;
       };
-      return false;
+  return;
+    }
+    
+    int getEnd(){
+      return end;
     }
 
 };
-
 class Stack{
   private:
     int top;
@@ -186,7 +184,6 @@ class Stack{
 
   char pop(){
     char clientCode;
-
     if(!isEmpty()){
       clientCode = stack[top];
     
@@ -217,7 +214,6 @@ class Stack{
   };
 
   void invertCode(string clientId){
-    
     for(int i = 0; i < clientId.length() ; i++){
       push(clientId[i]);
     }
@@ -226,15 +222,11 @@ class Stack{
   string getinvertCode(){
     string strInvertedCode =""; 
     int n = top;
-    for(int i = 0; i < n+1 ; i++){
-      if(!isEmpty()){
-     
-        strInvertedCode += pop();
-     
+      for(int i = 0; i < n+1 ; i++){
+        if(!isEmpty()){    
+          strInvertedCode += pop();
+        }
       }
-    }
-    cout << "Codigo volteado: " << strInvertedCode;
-    
     return strInvertedCode;
 };
 };
@@ -247,6 +239,7 @@ int main(){
   char menuOption;
   bool flag1 = true, flag2 = true;
   string currentClientId;
+  int tempEnd;
 
   cout << "-------------------------------------------------------------------" << endl;
   cout << "--------------BIENVENID@ AL SISTEMA DEL BANCO TESORO---------------" << endl;
@@ -286,16 +279,51 @@ int main(){
       case 'A':
         cout << "Ingrese el ID del cliente, minimo 3 digitos" << endl;
         cin >> currentClientId;
-        if(!clientQueue.generateCode(currentClientId)){
-          
+        tempEnd = clientQueue.getEnd();
+        clientQueue.generateCode(currentClientId);
+        if(tempEnd == clientQueue.getEnd()){
           Stack invertedCodeStack;
           invertedCodeStack.invertCode(currentClientId);
           clientQueue.generateCode(invertedCodeStack.getinvertCode());
-        };
+        }
+          
         flag2 = false;
         break;
-      
+      case 'a':
+        cout << "Ingrese el ID del cliente, minimo 3 digitos" << endl;
+        cin >> currentClientId;
+        tempEnd = clientQueue.getEnd();
+        clientQueue.generateCode(currentClientId);
+        if(tempEnd == clientQueue.getEnd()){
+          Stack invertedCodeStack;
+          invertedCodeStack.invertCode(currentClientId);
+          clientQueue.generateCode(invertedCodeStack.getinvertCode());
+        }
+          
+        flag2 = false;
+        break;
+      case '1':
+        taquilla1 = clientQueue.dequeue();
+        flag2 = false;
+        break;
+      case '2':
+        taquilla2 = clientQueue.dequeue();
+        flag2 = false;
+        break;
+      case '3':
+        taquilla3 = clientQueue.dequeue();
+        flag2 = false;
+        break;
+      case 'F':
+        flag1 = false;
+        flag2 = false;
+        break;
+      case 'f':
+        flag1 = false;
+        flag2 = false;
+        break;
       default:
+        cout << "Opcion no valida, intente de nuevo" << endl;
         break;
       }
     }
