@@ -31,12 +31,12 @@ class Queue{
         if(end == sizeof(queue)/sizeof(queue[0]) - 1 && front != 0){
         
         end = 0;
-        queue[end] = clientCode;
+        queue[end] = clientCode; 
         return;
         }
 
-        end++;
-        queue[end] = clientCode;
+        end++;      
+        queue[end] = clientCode;       
       }
       else{
         cout << "La cola esta llena" << endl;
@@ -48,11 +48,16 @@ class Queue{
 
         clientCode = queue[front];
         queue[front] = "";
-         front++;
-        if(front > end){
+        if(front == end){
           front = -1;
           end = -1;
-        };
+        }
+        else if(front == sizeof(queue)/sizeof(queue[0]) - 1){
+          front = 0;
+        }
+        else{
+          front++;
+        }
        
         return clientCode;
       }
@@ -71,7 +76,7 @@ class Queue{
     };
 
     bool isFull(){
-      if (front == 0 && end == sizeof(queue)/sizeof(queue[0])){
+      if (front == 0 && end == sizeof(queue)/sizeof(queue[0])-1){
         return true;
       }
       else if(front - abs(end) == 1){
@@ -102,6 +107,7 @@ class Queue{
         }
         if(i == sizeof(queue)/sizeof(queue[0]) - 1){
           i = 0;
+          continue;
         }
           i++;
       }
@@ -116,20 +122,21 @@ class Queue{
         cout << "Codigos en cola: " << endl;
         cout << "                           ___   "<< endl;
         while(flag){
-          if(i == end){
+          if(i == end)  {
             flag = false;
           }
-          if(i == sizeof(queue)/sizeof(queue[0])-1){
+          if(i > sizeof(queue)/sizeof(queue[0]) -1){
             i = 0;
+            continue;
           }
           cout << "                          |" << queue[i] << "|   "<< endl;
           i++;
         }
         cout << "                          |___|   "<< endl;
         }
-        else{
-          cout << "La cola esta vacia." << endl;
-        }
+      else{
+        cout << "La cola esta vacia." << endl;
+      }
 
     }
 
