@@ -250,6 +250,7 @@ int main(){
 
   string taquilla1= "###", taquilla2 = "###", taquilla3= "###";
   char menuOption;
+  string strMenuOption;
   bool flag1 = true, flag2 = true;
   string currentClientId;
   int tempEnd; 
@@ -285,11 +286,14 @@ int main(){
       cout << "F. Finalizar el programa" << endl;
       cout << endl;
 
-      cin >> menuOption;
+      cin >> strMenuOption;
 
-      if(isdigit(menuOption)){
-        menuOption = menuOption;
-      } else {menuOption = toupper(menuOption);}
+    if(strMenuOption.length() > 1){
+      menuOption = '0';
+    }else{
+      menuOption = strMenuOption[0];
+    }
+     
 
       switch (menuOption)
       {
