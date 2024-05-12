@@ -90,15 +90,15 @@ class Queue{
     bool compareCode(string clientCode){  
       bool flag = true;
       int i = (front > -1) ? front : 0;
-      int tempClientCode = stoi(clientCode);
-      int tempQueueCode;
+      string tempClientCode = clientCode;
+      string tempQueueCode;
 
       while(flag){
         if(queue[i] == ""){
           flag = false;
           break;
         }
-        tempQueueCode = stoi(queue[i]);
+        tempQueueCode = queue[i];
         if(i == end){
           flag = false;
         }
