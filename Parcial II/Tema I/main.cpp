@@ -293,6 +293,10 @@ int main(){
     }else{
       menuOption = strMenuOption[0];
     }
+
+     if(isdigit(menuOption)){
+      menuOption = menuOption;
+    } else {menuOption = toupper(menuOption);}
      
 
       switch (menuOption)
