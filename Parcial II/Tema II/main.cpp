@@ -109,7 +109,7 @@ void emptyList() {
         ptrTemp = ptr;
         ptr = nextTemp;
 
-        free(ptrTemp);
+        delete ptrTemp;
     }
     head_ref = NULL;
 }
@@ -145,7 +145,7 @@ void deleteNode(int step) {
             ptr->step.stepNumber = 0;
             foundFlag = true;
 
-            free(prtTemp);
+            delete prtTemp;
         }
         ptr = nextNode;
     }
@@ -192,7 +192,7 @@ void viewStepsOneByOne() {
 int getStepCount(Node* head) {
     int count = 0;
     Node* current = head;
-    while (current != nullptr) {
+    while (current != NULL) {
         count++;
         current = current->next;
     }
@@ -383,6 +383,7 @@ int main() {
                 cout<<"\n--------------------------------------------------"<<endl;
                 cout << "La receta "<<recipeName<<" ha sido eliminada." << endl;
                 cout<<"--------------------------------------------------\n"<<endl;
+                recipeName = "";
                 system("pause");
                 system("cls");
                 break;
