@@ -254,10 +254,11 @@ int main() {
                     }
                 } else {
                     cout << "Ingrese el nombre de la receta: ";
-                    cin >> recipeName;
+                    cin.ignore();
+                    getline(cin, recipeName);
                 }
                 
-                cin.ignore();
+                
 
                 do {
                     cout << "Ingrese el paso " << step << " de la receta: ";
