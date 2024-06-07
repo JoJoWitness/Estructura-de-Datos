@@ -1,0 +1,4 @@
+1 perro manzana hilo zorro casa
+2 libro carro queso mesa
+….
+N ……………………………………………
