@@ -76,10 +76,13 @@ bool isBalanced(Node * tree){
     }
     return false; 
 }
+
 // Iniciar ABB
 Node *tree = NULL;
 
 int main(){
+    int ntree=1,h,leave;
+    bool balance;
     string word;
     string sentence;
     ifstream treetxt;
@@ -99,8 +102,20 @@ int main(){
             insertNode(tree,word);
         }
 
+        cout<<"Arbol-"<<ntree<<" (Postorder): "<<endl;
+        postOrder(tree);
+
+        h = treeHeight(tree);
+        cout<<"Altura: "<<h<<endl;
+        leave = leaves(tree);
+        cout<<"Nodos Hoja: "<<leaves<<endl;
+        balance = isBalanced(tree);
+        cout<<"Balance: "<<(balance?" Es balanceado":" No esta balanceado")<<endl;
+
+        ntree++;
+        tree = NULL;
     }
 
     treetxt.close();
     return 0;
-};
+}
