@@ -1,4 +1,5 @@
-
+perro manzana hilo zorro casa
+libro carro queso mesa
 perro gato luna sol
 manzana naranja pera
 mesa silla escritorio
