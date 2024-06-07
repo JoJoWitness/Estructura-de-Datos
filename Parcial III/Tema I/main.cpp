@@ -52,9 +52,30 @@ int treeHeight(Node * tree){
 }
 
 // Cantidad de hojas 
+int leaves(Node * tree){
+    if(tree == NULL){
+        return 0;
+    }
+    if(tree->hi ==NULL && tree->hd ==NULL){
+        return 1;
+    }
+    return leaves(tree->hi)+ leaves(tree->hd);
+}
 
 // Verificar arbol equilibrado
+bool isBalanced(Node * tree){
+    int left_h, right_h;
+    if(tree == NULL){
+        return true;
+    }
+    left_h = treeHeight(tree->hi);
+    right_h = treeHeight(tree->hd);
 
+    if(abs(left_h-right_h)<= 1 && isBalanced(tree->hi) && isBalanced(tree->hd)){
+        return true;
+    }
+    return false; 
+}
 // Iniciar ABB
 Node *tree = NULL;
 
