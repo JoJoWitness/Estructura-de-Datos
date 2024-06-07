@@ -43,19 +43,19 @@ void postOrder(Node * tree){
 }
 
 // Calcular altura
-int treeHeight(Node * tree){
+int calculateTreeHeight(Node * tree){
     if(tree==NULL){
         return 0;
     }else{
-        int left_h = treeHeight(tree->hi);
-        int right_h = treeHeight(tree->hd);
+        int left_h = calculateTreeHeight(tree->hi);
+        int right_h = calculateTreeHeight(tree->hd);
         return (left_h>right_h ? left_h +1:right_h+1);
     }
 
 }
 
 // Cantidad de hojas 
-unsigned int leaves(Node * tree){
+unsigned int countLeaves(Node * tree){
     if(tree == NULL){
         return 0;
     }
@@ -63,8 +63,34 @@ unsigned int leaves(Node * tree){
         return 1;
     }
     
-    return leaves(tree->hi) + leaves(tree->hd);
+    return countLeaves(tree->hi) + countLeaves(tree->hd);
     
+}
+
+// Imprimir contenido hojas
+void printLeaves(Node * tree){
+    if(tree == NULL){
+        return;
+    }
+    if(tree->hi ==NULL && tree->hd ==NULL){
+        cout<<tree->inf<<" ";
+    }
+    printLeaves(tree->hi);
+    printLeaves(tree->hd);
+}
+
+// Imprimir arbol
+void printTree(Node * tree,int cont){
+      if(tree==NULL){
+        return;
+    }else{
+        printTree(tree->hd,cont+1);
+        for(int i=0;i<cont;i++){
+            cout<<"     ";
+        }
+        cout<<tree->inf<<endl;
+        printTree(tree->hi,cont+1);
+    }
 }
 
 // Verificar arbol equilibrado
@@ -73,8 +99,8 @@ bool isBalanced(Node * tree){
     if(tree == NULL){
         return true;
     }
-    left_h = treeHeight(tree->hi);
-    right_h = treeHeight(tree->hd);
+    left_h = calculateTreeHeight(tree->hi);
+    right_h = calculateTreeHeight(tree->hd);
 
     if(abs(left_h-right_h)<= 1 && isBalanced(tree->hi) && isBalanced(tree->hd)){
         return true;
@@ -88,7 +114,7 @@ bool isBalanced(Node * tree){
 Node *tree = NULL;
 
 int main(){
-    int ntree=1,h,leavesNum;
+    int treeNum=1,h,leavesNum;
     bool balance;
     string word;
     string sentence;
@@ -110,19 +136,29 @@ int main(){
             insertNode(tree,word);
         }
 
-        cout<<"Arbol-"<<ntree<<" (Postorder): "<<endl;
-        postOrder(tree);
+        cout<<"Arbol-"<<treeNum<<endl;
+        cout<<endl;
+        printTree(tree,0);
+        cout<<endl;
 
-        h = treeHeight(tree);
+        cout << "Busqueda Postorder: ";
+        postOrder(tree);
+        cout<<endl;
+        cout<<endl;
+        h = calculateTreeHeight(tree);
         cout<<"Altura: "<<h<<endl;
-        leavesNum = leaves(tree) ;
-        cout<<"Nodos Hoja: "<< leavesNum <<endl;
+        leavesNum = countLeaves(tree) ;
+        cout<<"Cantidad de nodos hoja: "<< leavesNum <<endl;
+        cout<<"Nodos hoja: ";
+        printLeaves(tree);
+        cout<<endl;
         balance = isBalanced(tree);
-        cout<<"Balance: "<<(balance?" Es balanceado":" No esta balanceado")<<endl;
+        cout<<"Balance: "<<(balance?"Es balanceado":"No esta balanceado")<<endl;
         cout << endl;
+        cout << "------------------------------------------" << endl;
     
 
-        ntree++;
+        treeNum++;
         tree = NULL;
     }
 
