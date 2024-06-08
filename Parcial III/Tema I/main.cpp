@@ -5,6 +5,13 @@
 #include <vector>
 #include <bits/stdc++.h>
 
+/*
+    Parcial III Practica 1 ABB Integrantes:
+    9907856 Jordano Pernia
+    29929240 Oriana Moreno
+    31180603 Ariani Valera
+*/
+
 using namespace std;
 
 struct Node{
@@ -127,7 +134,6 @@ int main(){
     }
 
     while(!treetxt.eof()){
-        //treetxt.getline(sentence,LENGHT,'\n');
         getline(treetxt, sentence);
         istringstream iss(sentence);
         
@@ -136,11 +142,11 @@ int main(){
             insertNode(tree,word);
         }
 
-        cout<<"Arbol-"<<treeNum<<endl;
+        cout << "\n---------------------------------------------------------------" << endl;
+        cout<<"--------------------------- ARBOL -"<<treeNum<<" -------------------------- "<<endl;
         cout<<endl;
         printTree(tree,0);
         cout<<endl;
-
         cout << "Busqueda Postorder: ";
         postOrder(tree);
         cout<<endl;
@@ -153,9 +159,9 @@ int main(){
         printLeaves(tree);
         cout<<endl;
         balance = isBalanced(tree);
-        cout<<"Balance: "<<(balance?"Es balanceado":"No esta balanceado")<<endl;
+        cout<<"Balance: "<<(balance?" Es equilibrado":" No esta equilibrado")<<endl;
+        cout << "---------------------------------------------------------------" << endl;
         cout << endl;
-        cout << "------------------------------------------" << endl;
     
 
         treeNum++;
