@@ -1,5 +1,6 @@
 perro manzana hilo zorro casa
 libro carro queso mesa
+abeja barco dedo elefante amuleto carro domino abasto azulejo gato perro 
 perro gato luna sol
 manzana naranja pera
 mesa silla escritorio
