@@ -341,6 +341,74 @@ void findMinRoute(char originChar, char destinationChar, int quantityOfNodes, in
 }
 
 
+void loadArch();
+
+int main(int argc, char** argv) {
+	int numNodes = Grafo::numNodesArch();
+	int** matrixTrans;
+	bool conexo;
+	vector<char> nodes;
+	Grafo g(numNodes);
+	g.loadMatrix();
+	
+	char option = ' ';
+	char node1 = ' ', node2 = ' ';
+	while (option != '3'){
+		nodes = g.getNodes();
+		
+		if(g.getNodes().size() == 0){
+			cout<<"El grafo ya no tiene nodo alguno"<<endl;
+			break;
+		}
+		
+		cout<<"El grafo es: \n\nNodos: ";
+		for (int i=0; i<nodes.size(); i++){
+			cout<<nodes[i]<<" ";
+		}
+		
+		cout<<"\n"<<endl;
+		g.printGrafo();
+		cout<<endl;
+		
+		matrixTrans = warshall(g.getMatrixAdj(), g.getNumNodes(), conexo);
+		
+		if (!conexo) {
+			findFontsAndWells(matrixTrans, g.getNumNodes(), g.getNodes());
+			cout<<endl;
+		}
+		
+		cout<<"\nOpciones a realizar: \n\n1) Eliminar nodo \n2) Encontrar ruta minima entre 2 nodos \n3) Salir"<<endl;
+		cout<<"Ingresa la opcion que desees: ";
+		cin>>option;
+		
+		if (option == '1'){
+			cout<<"\nIngresa el nodo a eliminar: ";
+			cin>>node1;
+			
+			node1 = toupper(node1);
+			g.deleteNode(node1);	
+		} else if (option == '2'){
+			cout<<"\nIngresa el nodo de origen: ";
+			cin>>node1;
+			cout<<"Ingresa el nodo destino: ";
+			cin>>node2;
+			
+			node1 = toupper(node1);
+			node2 = toupper(node2);
+			cout<<endl;
+			findMinRoute(node1, node2, g.getNumNodes(), g.getMatrixAdj(), matrixTrans, g.getNodes());
+		} else if (option == '3'){
+			cout<<"Saliendo..."<<endl;
+		} else {
+			cout<<"\nOpcion invalida "<<endl;
+		}
+		
+		system("pause");
+		system("cls");
+	}
+		
+	return 0;
+}
 
 
 
