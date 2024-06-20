@@ -1,14 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <string>
-
-#include <iostream>
-#include <fstream>
+#include <climits>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "Grafo.h"
 
 using namespace std;
 
@@ -34,11 +29,11 @@ class Grafo{
                 }
           }
             
-        };
-	    for (int i=0; i<quantityOfNodes; i++) {
-		    char c = 'A' + i;
-		    nodes.push_back(c);
-	  }
+		for (int i=0; i<quantityOfNodes; i++) {
+			char c = 'A' + i;
+			nodes.push_back(c);
+		}
+	}
 
     void addEdge(char origin, char destination, int w) {
 	    matrixAdj[origin - 'A'][destination - 'A'] = w;
@@ -150,11 +145,11 @@ class Grafo{
     return nodes;
   }
 
-  int getquantityOfNodes() {
+  int getQuantityOfNodes() {
     return quantityOfNodes;
   }
 
-}
+};
 
 
 int** warshall(int** matrixAdj, int quantityOfNodes, bool &conexo) {
@@ -209,7 +204,7 @@ void findSourcesAndSinks(int** matrixTrans, int quantityOfNodes, vector<char> no
 	for (int i=0; i<quantityOfNodes; i++) {
 		for (int j=0; j < quantityOfNodes; j++) {
 			if (matrixTrans[i][j] != 0) {
-				isSources[j] s= 0;
+				isSources[j]= 0;
 				isSink[i] = 0;
 			}
 		}
@@ -340,11 +335,22 @@ void findMinRoute(char originChar, char destinationChar, int quantityOfNodes, in
 	}	
 }
 
+int main() {
 
-void loadArch();
+		cout	<<"pasa por aqui: "<<endl;
 
-int main(int argc, char** argv) {
-	int numNodes = Grafo::numNodesArch();
+	 ifstream arch("aristas.txt");
+      int quantityOfNodes;
+      
+      if (arch.fail()) {
+        cout<< "Error al abrir el archivo" <<endl;
+        return 0;
+      }
+      
+      arch >> quantityOfNodes;
+      arch.close();
+
+	int numNodes = quantityOfNodes;
 	int** matrixTrans;
 	bool conexo;
 	vector<char> nodes;
@@ -370,10 +376,10 @@ int main(int argc, char** argv) {
 		g.printGrafo();
 		cout<<endl;
 		
-		matrixTrans = warshall(g.getMatrixAdj(), g.getNumNodes(), conexo);
+		matrixTrans = warshall(g.getMatrixAdj(), g.getQuantityOfNodes(), conexo);
 		
 		if (!conexo) {
-			findFontsAndWells(matrixTrans, g.getNumNodes(), g.getNodes());
+			findSourcesAndSinks(matrixTrans, g.getQuantityOfNodes(), g.getNodes());
 			cout<<endl;
 		}
 		
@@ -396,7 +402,7 @@ int main(int argc, char** argv) {
 			node1 = toupper(node1);
 			node2 = toupper(node2);
 			cout<<endl;
-			findMinRoute(node1, node2, g.getNumNodes(), g.getMatrixAdj(), matrixTrans, g.getNodes());
+			findMinRoute(node1, node2, g.getQuantityOfNodes(), g.getMatrixAdj(), matrixTrans, g.getNodes());
 		} else if (option == '3'){
 			cout<<"Saliendo..."<<endl;
 		} else {
