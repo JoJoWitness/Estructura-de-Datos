@@ -355,79 +355,102 @@ int main() {
 	Grafo g(numNodes);
 	g.loadMatrix();
 	
-	char option = ' ';
+	
 	char node1 = ' ', node2 = ' ';
 
-	cout << "Bienvenido al programa de grafos" << endl;
-	cout << "El programa esta pensado para facilitar el estudio de estas estructuras de datos " << endl;
+	cout << "\n--------------------------------------------------------------------------------" << endl;
+	cout << "\t\tBienvenido al programa de grafos!" << endl;
+	cout << "\nEl programa esta pensado para facilitar el estudio de estas estructuras de datos " << endl;
 	cout << "A continuacion se mostrara el grafo y las opciones que puedes realizar" << endl;
-	cout << "--------------------------------------------------------------------------------" << endl;
+	cout << "--------------------------------------------------------------------------------\n" << endl;
+	system("PAUSE");
+	system("cls");
 
-	while (option != '3'){
-		nodes = g.getNodes();
-		
-		if(g.getNodes().size() == 0){
-			cout<<"El grafo ya no tiene nodo alguno"<<endl;
-			break;
-		}
-		
-		cout<<"Nodos: ";
-		for (int i=0; i<nodes.size(); i++){
-			cout<<nodes[i]<<" ";
-		}
-		
-		cout<<"\n"<<endl;
-		g.printGrafo();
-		cout<<endl;
-		
-		cout << "Caracteristicas:" << endl;
+	char option;
 
-		matrixTrans = warshall(g.getMatrixAdj(), g.getQuantityOfNodes(), conexo);
-	
-		if (!conexo) {
-			findSourcesAndSinks(matrixTrans, g.getQuantityOfNodes(), g.getNodes());
-			cout<<endl;
-		}
+	do {
+			vector<char> nodes;
+			nodes = g.getNodes();
+			if (g.getNodes().size() == 0) {
+				cout << "El grafo ya no tiene nodo alguno" << endl;
+				system("PAUSE");
+				break;
+			}
 
-		cout << "--------------------------------------------------------------------------------" << endl;
+			cout<<"-------------------------------------------------"<<endl;
+			cout<<"\t\t       Grafo" << endl;
+			cout<<"-------------------------------------------------\n"<<endl;
+
+			cout<<"\nNodos:"<<endl;
+			for (int i = 0; i < nodes.size(); i++) {
+				cout << nodes[i] << " ";
+			}
+
+			cout << endl;
 		
-		cout<<"Opciones:" <<endl;
-		cout<<"1- Eliminar nodo " <<endl;
-		cout<<"2- Encontrar ruta minima entre 2 nodos" << endl;
-		cout<<"3- Salir"<<endl;
-		cout<< endl;
-		cin>>option;
-		
-		if (option == '1'){
-			cout<<"\nIngresa el nodo a eliminar: ";
-			cin>>node1;
-			
-			node1 = toupper(node1);
-			g.deleteNode(node1);	
-		} else if (option == '2'){
-			cout<<"\nIngresa el nodo de origen: ";
-			cin>>node1;
-			cout<<"Ingresa el nodo destino: ";
-			cin>>node2;
-			
-			node1 = toupper(node1);
-			node2 = toupper(node2);
-			cout<<endl;
-			findMinRoute(node1, node2, g.getQuantityOfNodes(), g.getMatrixAdj(), matrixTrans, g.getNodes());
-		} else if (option == '3'){
-			cout<<"\nGracias por usar el programa"<<endl;
-		} else {
-			cout<<"\nOpcion invalida "<<endl;
-		}
-		cout << "--------------------------------------------------------------------------------" << endl;
-		cout << endl;
-		cout << endl;
-		
-	}
+			g.printGrafo();
+			cout << endl;
+
+			cout<<"\nCaracteristicas:"<<endl;
+			bool conexo = false;
+			matrixTrans = warshall(g.getMatrixAdj(), g.getQuantityOfNodes(), conexo);
+
+			if (!conexo) {
+				findSourcesAndSinks(matrixTrans, g.getQuantityOfNodes(), g.getNodes());
+				cout << endl;
+			}
+
+			cout<<"\n-------------------------------------------------"<<endl;
+			cout<<"\t\tMenu de opciones:" <<endl;
+			cout<<"-------------------------------------------------\n"<<endl;
+			cout<<"1. Eliminar nodo " <<endl;
+			cout<<"2. Encontrar ruta minima entre 2 nodos" << endl;
+			cout<<"3. Salir"<<endl;
+			cout<<"\nSeleccione una opcion: ";
+			cin>>option;
+
+			switch (option) {
+				case '1': {
+					cout << "\nIngresa el nodo a eliminar: ";
+					cin >> node1;
+
+					node1 = toupper(node1);
+					g.deleteNode(node1);
+					system("PAUSE");
+					system("cls");
+					break;
+				}
+				case '2': {
+					cout << "\nIngresa el nodo de origen: ";
+					cin >> node1;
+					cout << "Ingresa el nodo destino: ";
+					cin >> node2;
+
+					node1 = toupper(node1);
+					node2 = toupper(node2);
+					cout << endl;
+					findMinRoute(node1, node2, g.getQuantityOfNodes(), g.getMatrixAdj(), matrixTrans, g.getNodes());
+					system("PAUSE");
+					system("cls");
+					break;
+				}
+				case '3': {
+					system("cls");
+					cout<<"\n------------------------------------------------------"<<endl;
+                	cout << " Muchas gracias por usar el programa!!!" << endl;
+                	cout<<"------------------------------------------------------\n"<<endl;
+					
+					break;
+				}
+				default: {
+					cout << "\nIngrese una opcion invalida" << endl;
+					system("PAUSE");
+					system("cls");
+					break;
+				}
+			}
+
+		} while (option != '3');
 		
 	return 0;
 }
-
-
-
-
